@@ -3,9 +3,10 @@ import decimal
 from typing import Tuple
 import aiohttp
 import redis.asyncio as redis
-import kombu
+import aio_pika
 import asyncpg
 
+from batcher.app.src.domain.setting import get_setting
 from .repos.redis import (
     get_period_sum, incr_period_sum, get_max_period_sum, get_user_total, get_global_average,
     incr_user_count_if_no_clicks, update_global_average, incr_user_total, compare_max_period_sum,
@@ -14,22 +15,13 @@ from .repos.redis import (
 )
 from .repos.pg import update_click_expiry, bulk_store_copy, delete_by_user_id
 from .repos.rmq import send_click_batch_copy
-
 from .models import Click
 
-
-SETTING_DICT = {
-    'PRICE_PER_CLICK': decimal.Decimal(1),
-    'DAY_MULT': decimal.Decimal(1),
-    'WEEK_MULT': decimal.Decimal(1),
-    'PROGRESS_MULT': decimal.Decimal(1),
-    'SESSION_ENERGY': decimal.Decimal(500),
-}
 
 PRECISION = 2
 
 
-async def add_click_batch_copy(r: redis.Redis, pg: asyncpg.Connection,  rmq: kombu.Connection, user_id: int, count: int) -> Click:
+async def add_click_batch_copy(r: redis.Redis, pg: asyncpg.Connection,  rmq: aio_pika.Channel, user_id: int, count: int) -> Click:
     _click_value = await click_value(r, pg, user_id)
     click_value_sum = _click_value * count
 
@@ -131,7 +123,3 @@ async def check_energy(r: redis.Redis, user_id: int, amount: int, _token: str) -
 
 async def get_energy(r: redis.Redis, user_id: int, _token: str) -> int:
     return await _get_refresh_energy(r, user_id, _token)
-
-
-def get_setting(name: str) -> decimal.Decimal:
-    return SETTING_DICT[name]

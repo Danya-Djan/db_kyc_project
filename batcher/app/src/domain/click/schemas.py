@@ -14,5 +14,9 @@ class ClickValueResponse(pydantic.BaseModel):
     value: decimal.Decimal
 
 
+class EnergyResponse(pydantic.BaseModel):
+    energy: int
+
+
 class BatchClickRequest(pydantic.BaseModel):
     count: int
