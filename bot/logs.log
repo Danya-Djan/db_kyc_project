@@ -1,0 +1,8 @@
+2024-10-27T23:59:11.744491+0300 | main : main | INFO | Starting bot
+2024-10-27T23:59:12.269505+0300 | start_handler : command_start | INFO | 7080735869 - @danya_danya23 : команда /start и не зарегистрирован
+2024-10-28T00:00:35.215099+0300 | start_handler : command_start | INFO | 193428034 - @s1lur : команда /start и не зарегистрирован
+2024-10-28T00:00:35.270428+0300 | start_handler : command_start | INFO | 402449803 - @danyadjan : команда /start и не зарегистрирован
+2024-10-28T00:01:50.305932+0300 | main : main | INFO | Starting bot
+2024-10-28T00:01:50.735100+0300 | start_handler : command_start | INFO | 402449803 - @danyadjan : команда /start и не зарегистрирован
+2024-10-28T00:02:04.042345+0300 | main : main | INFO | Starting bot
+2024-10-28T00:02:06.132110+0300 | start_handler : command_start | INFO | 402449803 - @danyadjan : команда /start и не зарегистрирован
