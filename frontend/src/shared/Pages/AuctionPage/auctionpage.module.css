@@ -1,0 +1,7 @@
+.title {
+    margin-bottom: 18px;
+}
+
+.title span {
+    color: var(--primary);
+}

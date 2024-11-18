@@ -1,0 +1,33 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.iconContainer {
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.icon {
+    width: 64px;
+    height: 64px;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.title {
+    margin-bottom: 12px;
+    text-align: center;
+    color: var(--primary);
+}
+
+.text {
+    margin-bottom: 32px;
+    text-align: center;
+    max-width: 320px;
+}

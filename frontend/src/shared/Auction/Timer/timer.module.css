@@ -1,0 +1,30 @@
+.container {
+    width: 110px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+}
+
+.block {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 33px;
+    flex-shrink: 0;
+}
+
+.text {
+    color: var(--greyA4);
+}
+
+.dot {
+    flex-shrink: 0;
+    padding-left: 1px;
+    padding-right: 1px;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background-color: var(--white);
+}

@@ -1,0 +1,40 @@
+.container {
+    display: flex;
+    align-items: center;
+}
+
+.img {
+    margin-right: 4px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: var(--white);
+}
+
+.name {
+    margin-bottom: 2px;
+}
+
+.pointsContainer {
+    display: flex;
+    align-items: center;
+}
+
+.points {
+    margin-right: 3px;
+    -webkit-text-fill-color: transparent;
+    background-clip: text !important;
+    background: var(--gradientPrimary);
+}
+
+.icon {
+    width: 14px;
+    height: 14px;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.content {
+    margin-left: 4px;
+}

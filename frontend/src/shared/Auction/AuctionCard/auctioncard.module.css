@@ -1,0 +1,116 @@
+.container {
+    padding: 6px;
+    border-radius: 20px;
+    box-shadow: 0px 0px 130px 0px rgba(124, 173, 216, 0.20);
+}
+
+.darkContainer {
+    background-color: var(--grey22);
+}
+
+.darkContainer .card {
+    background-color: var(--grey12);
+}
+
+.opacityContainer {
+    background: rgba(0, 0, 0, 0.4);
+}
+
+.opacityContainer .card {
+    background: rgba(0, 0, 0, 0.5);
+}
+
+.title {
+    margin-bottom: 18px;
+}
+
+.title2 {
+    margin-bottom: 8px;
+}
+
+.card {
+    padding: 15px 8px;
+    border-radius: 16px;
+    border: 1px solid var(--grey35);
+}
+
+.cardFlex {
+    display: flex;
+    gap: 5px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card1 {
+    margin-bottom: 4px;
+}
+
+.card2 {
+    margin-bottom: 24px;
+}
+
+.cardTop {
+    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.cardLeft {
+    max-width: 187px;
+}
+
+.cardLeft p span {
+    color: var(--primary);
+}
+
+.usersBlock {
+    display: flex;
+    align-items: center;
+}
+
+.userCount {
+    margin-left: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--grey35);
+    border-radius: 50%;
+    width: 25px;
+    height: 25px;
+}
+
+.newBtn {
+    text-align: left;
+}
+
+.newBtn p {
+    color: var(--grey35);
+}
+
+.prevText {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.icon {
+    width: 16px;
+    height: 16px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.leadCard {
+    box-shadow: 0px 0px 15px 0px rgba(122, 170, 214, 0.48);
+    border: 1px solid var(--primary);
+}
+
+.slider {
+    margin-bottom: 12px;
+    width: 100%;
+    aspect-ratio: 340/237;
+    border-radius: 15px;
+    overflow: hidden;
+}

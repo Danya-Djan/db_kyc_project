@@ -1,0 +1,21 @@
+.confetti {
+    z-index: 500 !important;
+}
+
+.animation {
+    animation: 5s 1 confetti;
+}
+
+@keyframes confetti {
+    0% {
+        opacity: 1;
+    }
+
+    80% {
+            opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}

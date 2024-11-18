@@ -1,0 +1,20 @@
+.title {
+    margin-bottom: 67px;
+    width: 196px;
+}
+
+.title span {
+    color: var(--primary);
+}
+
+.btn {
+    position: fixed;
+    width: calc(100% - 20px);
+    bottom: 16px;
+    right: 10px;
+}
+
+.styleName {
+    margin-top: 16px;
+    text-align: center;
+}

@@ -1,0 +1,19 @@
+.btnGroup {
+    margin-bottom: 24px;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    /*background-color: var(--grey19);*/
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 42px;
+}
+
+.title {
+    margin-bottom: 24px;
+}
+
+.btn {
+    margin-bottom: 20px;
+}

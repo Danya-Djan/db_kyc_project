@@ -1,0 +1,33 @@
+.container {
+    z-index: 10;
+    position: fixed;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    bottom: 10px;
+    left: 10px;
+    width: calc(100% - 20px);
+    border-radius: 24px;
+    /*background-color: var(--grey35);*/
+    backdrop-filter: blur(25px);
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn {
+    width: 50%;
+}
+
+.fire {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    background-color: var(--grey46);
+    transform: rotate(10deg);
+}

@@ -1,0 +1,15 @@
+.points {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+}
+
+.icon {
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.points {
+    font-weight: 600;
+}

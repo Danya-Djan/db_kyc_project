@@ -1,0 +1,23 @@
+.container {
+    margin-top: 30px;
+    width: 100%;
+}
+
+.title {
+    margin-bottom: 20px;
+}
+
+.winContainer {
+    padding-bottom: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    border-bottom: 1px solid var(--grey6C);
+}
+
+.otherContainer {
+    padding-top: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}

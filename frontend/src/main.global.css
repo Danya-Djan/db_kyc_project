@@ -1,0 +1,182 @@
+@font-face {
+    font-family: 'Inter';
+    src: url('./fonts/Inter-Regular.woff2') format("woff2"),
+        url('./fonts/Inter-Regular.woff') format("woff");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('./fonts/Inter-SemiBold.woff2') format("woff2"),
+        url('./fonts/Inter-SemiBold.woff') format("woff");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('./fonts/Inter-Bold.woff2') format("woff2"),
+        url('./fonts/Inter-Bold.woff') format("woff");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Inter';
+    src: url('./fonts/Inter-ExtraBold.woff2') format("woff2"),
+        url('./fonts/Inter-ExtraBold.woff') format("woff");
+    font-weight: 800;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Raleway';
+    src: url('./fonts/Raleway-Regular.woff2') format("woff2"),
+        url('./fonts/Raleway-Regular.woff') format("woff");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Raleway';
+    src: url('./fonts/Raleway-SemiBold.woff2') format("woff2"),
+        url('./fonts/Raleway-SemiBold.woff') format("woff");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+:root {
+    --primary: #7EB4DB;
+    --gradientPrimary: linear-gradient(90deg, #90D7ED 13.05%, #6887C4 91.06%, #8085C0 172.24%);
+    --black: #000000;
+    --white: #FFFFFF;
+    --elBackround: #383838;
+    --textColor: #FFFFFF;
+    --textColor2: #8F8F8F;
+    --pink: #FC4848;
+    --red: #FF0000;
+    --blue: #7EB4DB;
+    --purple: #9747FF;
+    --gradientBlue: linear-gradient(90deg, #90D7ED 13.05%, #6887C4 91.06%, #8085C0 172.24%);
+    --gradientOrange: linear-gradient(302deg, #FF5421 -59.57%, #FF7248 43.7%, #FF9576 163.26%);
+    --gradientYellow: linear-gradient(302deg, #6ACB54 -59.57%, #DCBB5A 43.7%, #E2883D 163.26%);
+    --gradientOrangeYellow: linear-gradient(302deg, #FF805A -1.15%, #DEAE53 83.89%);
+    --grey6F: #6F6F6F;
+    --grey6C: #6C6C6C;
+    --grey35: #353535;
+    --grey34: #343434;
+    --grey1B: #1B1B1B;
+    --greyA4: #A4A4A4;
+    --grey46: #464646;
+    --grey12: #121212;
+    --grey19: #191919;
+    --grey77: #777777;
+    --grey24: #242424;
+    --grey22: #222222;
+    --grey9A: #9A9A9A;
+    --grey93: #939393;
+}
+
+body {
+    padding: 0;
+    margin: 0;
+    font-size: 12px;
+    line-height: 120%;
+    font-family: 'Inter', sans-serif;
+    font-weight: 400;
+    box-sizing: border-box;
+    color: var(--textColor);
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+p, h1, h2, h3 {
+    margin: 0;
+    padding: 0;
+}
+
+h1,
+h2,
+h3 {
+    font-weight: 700;
+    line-height: 120%;
+}
+
+
+* {
+    color: var(--textColor);
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+input::placeholder {
+    white-space: pre-wrap;
+}
+
+button {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.main-header {
+    font-size: 65px;
+    line-height: 120%;
+    font-weight: 500;
+}
+
+#root {
+    height: 100%;
+}
+
+.background {
+    position: fixed;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 0;
+}
+
+/* slider */
+
+.swiper-pagination-bullet {
+    margin: 0 2px !important;
+    height: 5px !important;
+    width: 5px !important;
+    background-color: var(--white) !important;
+    opacity: 1 !important;
+}
+
+.swiper-pagination-bullet-active {
+    width: 20px !important;
+    border-radius: 5px !important;
+    background: var(--gradientPrimary) !important;
+}
+
+.swiper-slide {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}

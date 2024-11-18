@@ -1,0 +1,43 @@
+.errorContainer {
+    position: absolute;
+    margin-left: -250px;
+    max-width: 500px;
+    position: absolute;
+    margin-top: -50px;
+    top: 50%;
+    left: 50%;
+}
+
+.error {
+    margin-bottom: 16px;
+    text-align: center;
+    color: var(--red);
+    width: 100%;
+}
+
+.errorBtn {
+    padding: 17px;
+    color: var(--red);
+    border-radius: 22px;
+    border: 1px solid var(--red);
+    text-align: center;
+}
+
+.errorBtnRow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.btnReload {
+    margin-right: 15px;
+}
+
+@media (max-width: 520px) {
+    .errorContainer {
+        max-width: calc(100% - 15px);
+        /*width: calc(100% - 10px);*/
+        margin-left: -50%;
+    }
+}

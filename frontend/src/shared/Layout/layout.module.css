@@ -1,0 +1,5 @@
+.layout {
+    width: calc(100% - 20px);
+    margin: 20px auto;
+}
+

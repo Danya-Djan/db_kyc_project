@@ -1,0 +1,27 @@
+.content {
+    margin-top: 24px;
+    margin-bottom: 12px;
+}
+
+.title {
+    margin-bottom: 12px;
+}
+
+.title2 {
+    margin-bottom: 12px;
+    text-align: center;
+}
+
+.descr {
+    text-align: center;
+}
+
+.ranks {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.marginTop {
+    margin-top: 60px;
+}
