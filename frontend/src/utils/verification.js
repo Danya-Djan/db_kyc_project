@@ -5,6 +5,8 @@ export const verificationTg = () => {
         lastName: ''
     };
     let token = '';
+
+    console.log(`window.Telegram из verification ${window.Telegram}`);
     
     if(window.Telegram) {
         const tg = window.Telegram.WebApp;
@@ -39,14 +41,17 @@ export const verificationTg = () => {
         token = btoa(
           unescape(encodeURIComponent(validation))
         );
+        console.log(`token1 ${token}`);
         user.id = tg.initDataUnsafe?.user?.id;
         user.firstName = tg.initDataUnsafe?.user?.first_name;
         user.lastName = tg.initDataUnsafe?.user?.last_name;
     }
+    
+    console.log(`token2 ${token}`);
 
     //локально
     /*token = "TelegramToken";
-    user.id = "1083462027";
+    user.id = "123456";
     user.firstName = 'User';
     user.lastName = 'Name';*/
 

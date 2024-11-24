@@ -26,9 +26,11 @@ export function RoutePage({ page }: IRoutePage) {
     updateStyles();
   }, [page]);
 
+  //{!verified ? <WrongSourcePage/> : 
+  //} 
+
   return (
     <div>
-      {!verified ? <WrongSourcePage/> : 
       <div>
         {page === 'main' && !loadingUser && !errorUser && dataUser.name && dataUser.avatar && <ClickerPage name={dataUser.name} points={Number(dataUser.points)} img={dataUser.avatar} energy={Number(dataUser.energy)}/>}
         {page === 'rating' && !loadingUser && !errorUser && <RatingPage />}
@@ -37,7 +39,7 @@ export function RoutePage({ page }: IRoutePage) {
         {page === 'styles' && !loadingUser && !errorUser && <StylesPage />}
         {(loadingUser) && <div className={styles.spinnerContainer}><Spinner color='#FFFFFF' size='50px' thickness='6px' className={styles.spinner} /></div> }
         {errorUser && !loadingUser && <ErrorPage detail={errorUser}/>}
-      </div>} 
+      </div> 
     </div>
   );
 }

@@ -18,8 +18,8 @@ export type RootState = {
 //urlClick: 'http://127.0.0.1:8080',
 
 const initialState: RootState = {
-  url: '/',
-  urlClick: '/',
+  url: '',
+  urlClick: '',
   urlFull: '',
   token: '',
   userTg: {

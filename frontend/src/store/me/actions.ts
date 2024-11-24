@@ -53,7 +53,9 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
     const secondName = getState().userTg.lastName;
     const token = getState().token;
     const URL = getState().url;
-    if (tgId && URL && !meData.avatar && token.length != 0) {
+    const URLClick = getState().urlClick;
+    //localStorage.setItem('eg', '500');
+    /*if (tgId && URL && !meData.avatar && token.length != 0 && URLClick) {
         dispatch(meRequest());
         axios.get(`${URL}/api/v1/users/${tgId}/`, {
             headers: {
@@ -65,24 +67,40 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
             const user = resp.data;
             const encodeToken = btoa(unescape(encodeURIComponent(token)));
             const savedToken = localStorage.getItem('sts');
-            if (savedToken) {
-                if (savedToken != encodeToken) {
-                    localStorage.setItem('eg', user.energy); //user.energy
-                    localStorage.setItem('sts', encodeToken);
-                }
-            } else {
-                localStorage.setItem('eg', user.energy); //user.energy
-                localStorage.setItem('sts', encodeToken);
-            }
-            const userData = {
-                tgId: user.tg_id,
-                username: user.username,
-                avatar: user.avatar,
-                energy: user.energy, //user.energy
-                points: user.points,
-                name: `${firstName} ${secondName}`
-            };
-            dispatch(meRequestSuccess(userData));
+            axios.get(`${URLClick}/api/v1/energy`, {
+                        headers: {
+                            //"Content-type": "application/json",
+                            "Authorization": `TelegramToken ${token}`
+                        }
+                    },
+                    ).then((resp) => {
+                        const energy = resp.data.energy;
+                        if (savedToken) {
+                            if (savedToken != encodeToken) {
+                                localStorage.setItem('eg', '200'); //enegry
+                                localStorage.setItem('sts', encodeToken);
+                            }
+                        } else {
+                            localStorage.setItem('eg', '200'); //energy
+                            localStorage.setItem('sts', encodeToken);
+                        }
+                        const userData = {
+                            tgId: user.tg_id,
+                            username: user.username,
+                            avatar: user.avatar,
+                            energy: energy.toString(), //energy
+                            points: user.points,
+                            name: `${firstName} ${secondName}`
+                        };
+                        dispatch(meRequestSuccess(userData));
+                    }).catch((err) => {
+                        console.log(err);
+                        if (err.response.data.detail) {
+                            dispatch(meRequestError(String(err.response.data.detail)));
+                        } else {
+                            dispatch(meRequestError(String(err)));
+                        }
+                    })
         }).catch((err) => {
             console.log(err);
             if (err.response.data.detail) {
@@ -91,9 +109,9 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
                 dispatch(meRequestError(String(err)));
             }
         })
-    }
-    /*if (tgId && URL && !meData.avatar) {
-        axios.get(`${URL}/api/v1/users/get-token/1083462027`, {
+    }*/
+    if (tgId && URL && !meData.avatar) {
+        axios.get(`${URL}/api/v1/users/get-token/123456`, {
             headers: {
                 "Content-type": "application/json"
             }
@@ -113,28 +131,44 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
                     const user = resp.data;
                     const encodeToken = btoa(unescape(encodeURIComponent(token)));
                     const savedToken = localStorage.getItem('sts');
-                    if(savedToken) {
-                        if(savedToken != encodeToken) {
-                            localStorage.setItem('eg', user.energy); //user.energy
+                    axios.get(`${URLClick}/api/v1/energy`, {
+                        headers: {
+                            //"Content-type": "application/json",
+                            "Authorization": `TelegramToken ${token}`
+                        }
+                    },
+                    ).then((resp) => {
+                        const energy = resp.data.energy;
+                        if (savedToken) {
+                            if (savedToken != encodeToken) {
+                                localStorage.setItem('eg', '200'); //enegry
+                                localStorage.setItem('sts', encodeToken);
+                            }
+                        } else {
+                            localStorage.setItem('eg', '200'); //energy
                             localStorage.setItem('sts', encodeToken);
                         }
-                    } else {
-                        localStorage.setItem('eg', user.energy); //user.energy
-                        localStorage.setItem('sts', encodeToken);
-                    }
-                    const userData = { 
-                        tgId: user.tg_id, 
-                        username: user.username, 
-                        avatar: user.avatar, 
-                        energy: user.energy, //user.energy
-                        points: user.points,
-                        name: `${firstName} ${secondName}`
-                    };
-                    dispatch(meRequestSuccess(userData));
+                        const userData = {
+                            tgId: user.tg_id,
+                            username: user.username,
+                            avatar: user.avatar,
+                            energy: energy.toString(), //user.energy
+                            points: user.points,
+                            name: `${firstName} ${secondName}`
+                        };
+                        dispatch(meRequestSuccess(userData));
+                    }).catch((err) => {
+                        console.log(err);
+                        if (err.response.data.detail) {
+                            dispatch(meRequestError(String(err.response.data.detail)));
+                        } else {
+                            dispatch(meRequestError(String(err)));
+                        }
+                    })
                 }).catch((err) => {
                     console.log(err);
-                    if(err.response.data.detail) {
-                       dispatch(meRequestError(String(err.response.data.detail))); 
+                    if (err.response.data.detail) {
+                        dispatch(meRequestError(String(err.response.data.detail)));
                     } else {
                         dispatch(meRequestError(String(err)));
                     }
@@ -143,7 +177,8 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
         }).catch((err) => {
             console.log(err);
             dispatch(meRequestError(String(err)));
-        })*/
+        })
+    }
 }
 
 

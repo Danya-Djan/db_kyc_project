@@ -42,11 +42,13 @@ export function ClickerBtn({ coins, setCoins, energy }: IClickerBtn) {
   }, [styleIndex]);
 
   const btnClick = () => {
-    if(!error) {
+    sendClick();
+    /*if(!error) {
+      sendClick();
       const newEnergy = initEnergy - 1;
       const newFill = (maxEnergy - newEnergy) / maxEnergy * 100;
       if (newFill <= 100) {
-        //sendClick();
+        sendClick();
         const newCoins = coins + 1;
         dispatch<any>(updateCoinsRequestAsync(newCoins, newEnergy))
         setCoins(newCoins);
@@ -68,19 +70,46 @@ export function ClickerBtn({ coins, setCoins, energy }: IClickerBtn) {
       }
     } else {
       sendClick();
-    }
+    }*/
   };
 
   const sendClick = () => {
     if(urlClick && token) {
-      axios.get(`${urlClick}/click`, {
+      axios.get(`${urlClick}/api/v1/click`, {
         headers: {
-          "Content-type": "application/json",
+          //"Content-type": "application/json",
           "Authorization": `TelegramToken ${token}`
         }
       },
       ).then((resp) => {
         console.log(resp);
+        if(resp.data) {
+          const click = Number(resp.data.click.value);
+          //
+          const newEnergy = initEnergy - click;
+          const newFill = (maxEnergy - newEnergy) / maxEnergy * 100;
+          if (newFill <= 100) {
+            const newCoins = coins + click;
+            dispatch<any>(updateCoinsRequestAsync(newCoins, newEnergy))
+            setCoins(newCoins);
+            setEnergy(newEnergy)
+            setFill(newFill);
+          } else {
+            setFill(100);
+          }
+
+          if (newFill < 100) {
+            setSize(220);
+
+            const timer = setTimeout(() => {
+              setSize(240);
+              clearTimeout(timer);
+            }, 100);
+          } else {
+            setClose(false);
+          }
+          //
+        }
         if(error) {
           setError(false)
         }
@@ -101,12 +130,12 @@ export function ClickerBtn({ coins, setCoins, energy }: IClickerBtn) {
     },
     {
       title: 'Как продолжить кликать',
-      text: <span>Чтобы охладиться, нужно перезагрузить систему, нажав по&nbsp;кнопке ниже.</span>,
+      text: <span>Чтобы охладиться, нужно нужно закрыть приложение, нажав по&nbsp;кнопке ниже.</span>,
       img: 'assets/Monocle.png'
     },
     {
       title: 'Что дальше',
-      text: <span>Система перезагрузится и&nbsp;ты&nbsp;сможешь продолжить поддерживать свою большую концентрацию.</span>,
+      text: <span>Затем ты&nbsp;сможешь открыть приложение заново и&nbsp;продолжить поддерживать свою большую концентрацию.</span>,
       img: 'assets/Rocket.png'
     },
   ];
@@ -121,8 +150,8 @@ export function ClickerBtn({ coins, setCoins, energy }: IClickerBtn) {
           {gradient}
         </defs>
       </svg>
-      {!close && <ModalWindow setCloseAnimOut={setClose} setClose={setClose} modalBlock={
-        <ClickerPopup title='Кнопка перегрелась' cards={hotCards} setClose={setClose} />
+      {!close && <ModalWindow setCloseAnimOut={setClose} removeBtn={true} setClose={setClose} modalBlock={
+        <ClickerPopup title='Кнопка перегрелась' cards={hotCards} setClose={setClose} isBtn={true}/>
       } />}
       {!closeError && <ModalWindow removeBtn={true} setCloseAnimOut={setAnimClose} closeAnimOut={animClose} setClose={setCloseError} modalBlock={
         <DevPopup setClose={setAnimClose} type='error'/>

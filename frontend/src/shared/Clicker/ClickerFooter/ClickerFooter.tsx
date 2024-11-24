@@ -10,7 +10,7 @@ export function ClickerFooter() {
   const navigate = useNavigate();
   const [closeAnimOut, setCloseAnimOut] = useState(false);
   const [closeDev, setCloseDev] = useState(true);
-  const isDev = false;
+  const isDev = true;
 
   return (
     <div className={styles.container}>

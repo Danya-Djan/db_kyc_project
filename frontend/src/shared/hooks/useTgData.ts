@@ -17,6 +17,8 @@ export function useTgData() {
         if (savedToken.length === 0) {
             //@ts-ignore
             const [user, token]: [IUserTg, string] = verificationTg();
+            console.log(`user из useTgData ${user}`);
+            console.log(`token3 ${token}`);
             if (token.length != 0 && user.id && user.id.length != 0) {
                 setVerified(true);
                 dispatch<any>(saveToken(token));
