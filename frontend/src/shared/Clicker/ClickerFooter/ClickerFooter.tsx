@@ -16,9 +16,9 @@ export function ClickerFooter() {
     <div className={styles.container}>
       <ClickerBtnFooter text='Стили' className={styles.btn} onClick={() => navigate('/styles')}/>
       <ClickerBtnFooter text='Аукцион' className={styles.btn} onClick={() => { !isDev ? navigate('/auction') : setCloseDev(false) }}/>
-      <div className={styles.fire}>
+      { !isDev && <div className={styles.fire}>
         <Icon icon={EIcons.FireIcon}/>
-      </div>
+      </div>}
       {!closeDev && <ModalWindow removeBtn={true} setCloseAnimOut={setCloseAnimOut} closeAnimOut={closeAnimOut} setClose={setCloseDev} modalBlock={
         <DevPopup setClose={setCloseAnimOut} type='dev' />
       } />}

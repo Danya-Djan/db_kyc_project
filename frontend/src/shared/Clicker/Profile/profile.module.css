@@ -38,3 +38,13 @@
 .content {
     margin-left: 4px;
 }
+
+.emptyIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 25px;
+    height: 25px;
+    background-color: var(--grey12);
+    border-radius: 50%;
+}

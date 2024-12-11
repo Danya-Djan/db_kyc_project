@@ -15,11 +15,21 @@ interface IModalWindow {
 export function ModalWindow({ modalBlock, setClose, removeBtn, closeAnimOut, setCloseAnimOut }: IModalWindow) {
   const node = document.querySelector('#modal_root');
   const [closeAnim, setCloseAnim] = useState(false);
+  const html = document.querySelector('html');
+
+  useEffect(() => {
+    if (html) {
+      html.style.overflowY = 'hidden';
+    }
+  }, []);
 
   if (!node) return null;
 
   const closePopUp = () => {
     setCloseAnim(true);
+    if (html) {
+      html.style.overflowY = 'auto';
+    }
 
     const timer = setTimeout(() => {
       setClose(true);

@@ -17,3 +17,20 @@
     flex-direction: column;
     gap: 8px;
 }
+
+.containerStorage {
+    position: relative;
+}
+
+.dev {
+    z-index: 3;
+    position: absolute;
+    width: calc(100% + 10px);
+    height: calc(100% + 10px);
+    top: -2px;
+    left: -5px;
+    border-radius: 25px;
+    background-color: rgb(37, 37, 37, 0.2);;
+    backdrop-filter: blur(4px);
+}
+

@@ -8,14 +8,16 @@ import { useDispatch } from 'react-redux';
 import { updateCoinsRequestAsync } from '../../../store/me/actions';
 import axios from 'axios';
 import { DevPopup } from '../../Elements/DevPopup';
+import { saveMult } from '../../../store/mult';
 
 interface IClickerBtn {
   coins: number,
   setCoins(a: number): void,
-  energy: number
+  energy: number,
+  setMult(a: number): void
 }
 
-export function ClickerBtn({ coins, setCoins, energy }: IClickerBtn) {
+export function ClickerBtn({ coins, setCoins, energy, setMult }: IClickerBtn) {
   const urlClick = useAppSelector<string>(state => state.urlClick);
   const token = useAppSelector<string>(state => state.token);
   const [fill, setFill] = useState(0);
@@ -27,14 +29,20 @@ export function ClickerBtn({ coins, setCoins, energy }: IClickerBtn) {
   const [gradient, setGradient] = useState(getGradient());
   let styleIndex = useAppSelector<number>(state => state.styleIndex);
   const [initEnergy, setEnergy] = useState(energy);
-  const maxEnergy = Number(localStorage.getItem('eg'));
+  //const maxEnergy = Number(localStorage.getItem('eg'));
+  const [maxEnergy, setMaxEnergy] = useState(500);
   const [closeError, setCloseError] = useState(true);
   const [error, setError] = useState(false);
   const [animClose, setAnimClose] = useState(false);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setFill((maxEnergy - initEnergy)/maxEnergy * 100);
+    const savedEnergy = sessionStorage.getItem('eg');
+    if(savedEnergy) {
+      const encodeEnergy = atob(savedEnergy);
+      setMaxEnergy(Number(encodeEnergy));
+    }
+    setFill((maxEnergy - initEnergy) / maxEnergy * 100);
   }, []);
 
   useEffect(() => {
@@ -42,54 +50,36 @@ export function ClickerBtn({ coins, setCoins, energy }: IClickerBtn) {
   }, [styleIndex]);
 
   const btnClick = () => {
-    sendClick();
-    /*if(!error) {
+    if (!(initEnergy === 0)) {
       sendClick();
-      const newEnergy = initEnergy - 1;
-      const newFill = (maxEnergy - newEnergy) / maxEnergy * 100;
-      if (newFill <= 100) {
-        sendClick();
-        const newCoins = coins + 1;
-        dispatch<any>(updateCoinsRequestAsync(newCoins, newEnergy))
-        setCoins(newCoins);
-        setEnergy(newEnergy)
-        setFill(newFill);
-      } else {
-        setFill(100);
-      }
-
-      if (newFill < 100) {
-        setSize(220);
-
-        const timer = setTimeout(() => {
-          setSize(240);
-          clearTimeout(timer);
-        }, 100);
-      } else {
-        setClose(false);
-      }
     } else {
-      sendClick();
-    }*/
+      setClose(false);
+    }
   };
 
   const sendClick = () => {
-    if(urlClick && token) {
-      axios.get(`${urlClick}/api/v1/click`, {
-        headers: {
-          //"Content-type": "application/json",
-          "Authorization": `TelegramToken ${token}`
+    if(token) {
+      axios.post(`${urlClick}/api/v1/click/`,
+        {}, 
+        {
+          headers: {
+            "Authorization": `TelegramToken ${token}`
+          }
         }
-      },
       ).then((resp) => {
-        console.log(resp);
+        //console.log(resp);
         if(resp.data) {
           const click = Number(resp.data.click.value);
           //
-          const newEnergy = initEnergy - click;
+          const encodeMult = btoa(click.toString());
+          sessionStorage.setItem('mt', encodeMult);
+          //
+          const newEnergy = Number(resp.data.energy);
+          setMult(Number(click.toFixed(2)))
+          dispatch<any>(saveMult(Number(click.toFixed(2))));
           const newFill = (maxEnergy - newEnergy) / maxEnergy * 100;
           if (newFill <= 100) {
-            const newCoins = coins + click;
+            const newCoins = Number(coins + click);
             dispatch<any>(updateCoinsRequestAsync(newCoins, newEnergy))
             setCoins(newCoins);
             setEnergy(newEnergy)

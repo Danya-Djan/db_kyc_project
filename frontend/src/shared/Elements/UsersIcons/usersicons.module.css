@@ -6,7 +6,7 @@
     position: absolute;
     top: 0;
     border-radius: 50%;
-    background-color: var(--white);
+    background-color: var(--grey6C);
     border: 1px solid var(--grey12);
 }
 

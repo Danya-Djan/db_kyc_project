@@ -32,6 +32,7 @@ function AppComponent() {
             <Route path='/referral' element={<RoutePage page='referral' />} />
             <Route path='/auction' element={<RoutePage page='auction' />} />
             <Route path='/styles' element={<RoutePage page='styles' />} />
+            <Route path='*' element={<RoutePage page='main' />} />
           </Routes>
           <AuctionMainPopups />
         </Layout>

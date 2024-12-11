@@ -24,33 +24,33 @@
     background: var(--gradientBlue);
 }
 
-.card1 div {
+/*.card1 div {
     background-image: url('assets/style1.png');
-}
+}*/
 
 .card2 {
     background: var(--gradientOrange);
 }
 
-.card2 div {
+/*.card2 div {
     background-image: url('assets/style2.png');
-}
+}*/
 
 .card3 {
     background: var(--gradientYellow);
 }
 
-.card3 div {
+/*.card3 div {
     background-image: url('assets/style3.png');
-}
+}*/
 
 .card4 {
     background: var(--gradientOrangeYellow);
 }
 
-.card4 div {
+/*.card4 div {
     background-image: url('assets/style4.png');
-}
+}*/
 
 .disabled {
     position: relative;

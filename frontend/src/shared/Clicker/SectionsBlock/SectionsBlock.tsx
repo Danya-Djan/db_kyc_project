@@ -10,7 +10,11 @@ import { UsersIcons } from '../../Elements/UsersIcons';
 import { formatNumber } from '../../../utils/formatNumber';
 import { DevPopup } from '../../Elements/DevPopup';
 
-export function SectionsBlock() {
+interface ISectionsBlock {
+  mult:number;
+}
+
+export function SectionsBlock({ mult }: ISectionsBlock) {
   const scaleRef = 70;
   const [close, setClose] = useState(true);
   const navigate = useNavigate();
@@ -41,20 +45,23 @@ export function SectionsBlock() {
     <div className={styles.sectionContainer}>
       <div className={styles.leftContainer}>
         <CardSection title='Место в топе' onClick={() => {!isDev ? navigate('/rating') : setCloseDev(false)}}>
-          {!isDev && <div className={styles.bottomRank}>
+          {<div className={`${styles.bottomRank} ${isDev ? styles.dev : ''}`}>
             <div style={ETextStyles.InSb12120}>
               <span className={styles.rank1}>#</span>
-              <span>{formatNumber(12980)}</span>
+              <span>{formatNumber(1)}</span>
             </div>
             <UsersIcons size={16}/>
           </div>}
         </CardSection>
-        <CardSection title='Множитель' onClick={() => { !isDev ? setClose(false) : setCloseDev(false) }}>
-          {!isDev &&<PointsBlock points='1.50' />}
+        <CardSection title='Множитель' onClick={() => { setClose(false) }}>
+          <p style={ETextStyles.InSb12120}>
+            <span style={{color: 'var(--primary)'}}>{'X '}</span>
+            {mult}
+          </p>
         </CardSection>
       </div>
-      <CardSection title='Реферальное хранилище' className={styles.rigthEl} onClick={() => { !isDev ? navigate('/referral') : setCloseDev(false) }}>
-        {!isDev &&<div>
+      <CardSection title='Реферальное хранилище' className={styles.rigthEl} onClick={() => { navigate('/referral') }}>
+        {<div className={isDev ? styles.dev : ''}>
           <PointsBlock points={formatNumber(800)} className={styles.scalePoints} />
           <div className={styles.scaleContainer}>
             <div className={styles.scale} style={{ width: `${scaleRef}px` }}></div>

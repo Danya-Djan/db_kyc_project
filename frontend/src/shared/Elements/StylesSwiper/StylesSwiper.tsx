@@ -73,7 +73,7 @@ export const StylesSwiper: React.FC<IStylesSwiper> = memo(({ selectedStyle, setC
                   transform: `rotate(${isActive ? 0 : deg}deg)`,
                   filter: `blur(${isActive ? 0 : 3}px)`
                 }}
-              ><div className={styles.img}></div></div>
+              ><div className={styles.img} style={{ backgroundImage: `url('assets/style${index + 1}.png')`}}></div></div>
             );
           }}
         </SwiperSlide>))}

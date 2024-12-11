@@ -8,9 +8,10 @@ interface IStorageScale {
   percent: number,
   points: string,
   className ?: string,
+  isDev?: boolean,
 }
 
-export function StorageScale({ percent, points, className }: IStorageScale) {
+export function StorageScale({ percent, points, className, isDev=false }: IStorageScale) {
   const [showNotif, setShow] = useState(false);
   const [initpercent, setPercent] = useState(percent);
 
@@ -26,8 +27,9 @@ export function StorageScale({ percent, points, className }: IStorageScale) {
       <div className={styles.content} style={ETextStyles.InSb16120}>
         {initpercent ===100 && <p>Забрать</p>}
         {initpercent > 0 && <PointsBlock points={points} sizeIcon={20} sizeText={16} />}
-        {initpercent === 0 && <div className={styles.imgVolt} style={{backgroundImage: "url('assets/Volt.png')"}}></div>}
-        {initpercent === 0 && <p style={ETextStyles.InRg14120}>Больше друзей — быстрее заполнение</p> }
+        {initpercent === 0 && !isDev && <div className={styles.imgVolt} style={{backgroundImage: "url('assets/Volt.png')"}}></div>}
+        {initpercent === 0 && !isDev && <p style={ETextStyles.InRg14120}>Больше друзей — быстрее заполнение</p> }
+        {isDev && <p style={ETextStyles.InRg14120}>Скоро откроем</p>}
       </div>
       <div className={styles.scale} style={{ width: `${initpercent}%`}}></div>
       {showNotif && <Notification title='Пополнение' text={`Баланс баллов увеличен на ${points}`} setShow={setShow} />}

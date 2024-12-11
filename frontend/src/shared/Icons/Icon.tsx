@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ArrowIcon, BitCoinIcon, ChartIcon, CopyIcon, FireIcon, SmallCoinIcon, TrendIcon, UpPriceIcon } from './commonIcons';
+import { ArrowIcon, BitCoinIcon, ChartIcon, CopyIcon, FireIcon, ProfileIcon, SmallCoinIcon, StyleIcon, TrendIcon, UpPriceIcon } from './commonIcons';
 import { MedalFirstIcon, MedalSecondIcon, MedalThirdIcon } from './medals';
 interface IconsProps {
     icon: EIcons;
@@ -17,7 +17,9 @@ export const EIcons = {
     TrendIcon: <TrendIcon/>,
     ChartIcon: <ChartIcon/>,
     CopyIcon: <CopyIcon/>,
-    UpPriceIcon: <UpPriceIcon/>
+    UpPriceIcon: <UpPriceIcon/>,
+    ProfileIcon: <ProfileIcon/>,
+    StyleIcon: <StyleIcon />
 } as const;
 
 type EIcons = typeof EIcons[keyof typeof EIcons];

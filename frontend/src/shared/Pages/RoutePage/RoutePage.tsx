@@ -12,6 +12,7 @@ import { useUserData } from '../../hooks/useUserData';
 import { Spinner } from '../../Elements/Spinner';
 import { updateBackground } from '../../../utils/updateBackground';
 import { ErrorPage } from '../ErrorPage';
+import { useNavigate } from 'react-router-dom';
 
 interface IRoutePage {
   page: string
@@ -20,26 +21,37 @@ interface IRoutePage {
 export function RoutePage({ page }: IRoutePage) {
   const verified = useTgData();
   const { dataUser, loadingUser, errorUser } = useUserData();
+  const navigate = useNavigate();
+  //@ts-ignore
+  const tg = window.Telegram.WebApp;
+  var BackButton = tg.BackButton;
 
   useEffect(() => {
     updateBackground(page);
     updateStyles();
+    if(page === 'main') {
+      BackButton.hide();
+    } else {
+      BackButton.show();
+    }
   }, [page]);
 
-  //{!verified ? <WrongSourcePage/> : 
-  //} 
+  BackButton.onClick(function () {
+    navigate(-1);
+  });
 
   return (
     <div>
-      <div>
-        {page === 'main' && !loadingUser && !errorUser && dataUser.name && dataUser.avatar && <ClickerPage name={dataUser.name} points={Number(dataUser.points)} img={dataUser.avatar} energy={Number(dataUser.energy)}/>}
+      {!verified ? <WrongSourcePage /> : <div>
+        { //@ts-ignore
+        page === 'main' && !loadingUser && !errorUser && dataUser.name && <ClickerPage name={dataUser.name} points={Number(dataUser.points)} img={dataUser.avatar} energy={Number(dataUser.energy)}/>}
         {page === 'rating' && !loadingUser && !errorUser && <RatingPage />}
         {page === 'referral' && !loadingUser && !errorUser && <StoragePage />}
         {page === 'auction' && !loadingUser && !errorUser && <AuctionPage />}
         {page === 'styles' && !loadingUser && !errorUser && <StylesPage />}
         {(loadingUser) && <div className={styles.spinnerContainer}><Spinner color='#FFFFFF' size='50px' thickness='6px' className={styles.spinner} /></div> }
         {errorUser && !loadingUser && <ErrorPage detail={errorUser}/>}
-      </div> 
+      </div>} 
     </div>
   );
 }

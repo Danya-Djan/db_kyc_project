@@ -3,6 +3,8 @@ import { SET_TOKEN } from './token';
 import { IUserTg, SET_USER_TG } from './userTg';
 import { MeState, meReducer } from './me/reducer';
 import { ME_REQUEST, ME_REQUEST_ERROR, ME_REQUEST_SUCCESS } from './me/actions';
+import { SET_REFERRAL } from './referral';
+import { SET_MULT } from './mult';
 
 export type RootState = {
   url: string,
@@ -11,7 +13,9 @@ export type RootState = {
   token: string,
   userTg: IUserTg,
   styleIndex: number,
-  me: MeState
+  me: MeState,
+  referral: string,
+  mult: number
 };
 
 //'http://127.0.0.1:8000'
@@ -33,6 +37,8 @@ const initialState: RootState = {
     error: '',
     data: {}
   },
+  referral: '',
+  mult: 1
 };
 
 export const RESET_STATE = 'RESET_STATE';
@@ -52,6 +58,16 @@ export const rootReducer: Reducer<RootState> = (state = initialState, action) =>
       return {
         ...state,
         userTg: action.userTg
+      };
+    case SET_REFERRAL:
+      return {
+        ...state,
+        referral: action.referral
+      };
+    case SET_MULT:
+      return {
+        ...state,
+        mult: action.mult
       };
     case ME_REQUEST:
     case ME_REQUEST_SUCCESS:
