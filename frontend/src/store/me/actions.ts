@@ -5,6 +5,12 @@ import axios from "axios";
 import { saveMult } from "../mult";
 import { saveToken } from "../token";
 
+export interface IAuctionItem {
+    name: string,
+    img: string,
+    bet: string
+}
+
 export interface IUserData {
     tgId?: number;
     username?: string;
@@ -14,7 +20,9 @@ export interface IUserData {
     energy?: string;
     referralStorage?: string;
     maxStorage: number;
-    rank ?: number
+    rank ?: number,
+    loseAuctions?: Array<IAuctionItem>,
+    topAuctions?: Array<IAuctionItem>,
 }
 
 export const ME_REQUEST = 'ME_REQUEST';
@@ -117,6 +125,8 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
                 const savedToken = sessionStorage.getItem('tk');
                 if (savedToken) {
                     if (savedToken != encodeToken) {
+                        sessionStorage.setItem('shT', 't');
+                        sessionStorage.setItem('shL', 't');
                         sessionStorage.setItem('tk', encodeToken);
                         firstClick(token);
                         const energyCode = btoa(energy.toString());
@@ -170,7 +180,7 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
         })
     }
     /*if (tgId && Url && !meData.username) {
-        axios.get(`${Url}/api/internal/users/get-token/123456`, {
+        axios.get(`${Url}/api/internal/users/get-token/${tgId}`, {
             headers: {
                 "Content-type": "application/json"
             }
@@ -211,6 +221,8 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
                         const savedToken = sessionStorage.getItem('tk');
                         if (savedToken) {
                             if (savedToken != encodeToken) {
+                                sessionStorage.setItem('shT', 't');
+                                sessionStorage.setItem('shL', 't');
                                 sessionStorage.setItem('tk', encodeToken);
                                 firstClick(token);
                                 const energyCode = btoa(energy.toString());
@@ -295,6 +307,7 @@ export const updatePointsRequestAsync = (): ThunkAction<void, RootState, unknown
             const newData = meData;
             newData.points = points;
             dispatch(meRequestSuccess(newData));
+            dispatch(loadNewRank());
         }).catch((err) => {
             console.log(err);
             dispatch(meRequestError(String(err)));
@@ -318,5 +331,45 @@ export const updateRank = (rank: number): ThunkAction<void, RootState, unknown, 
 
     let newData = meData;
     newData.rank = rank;
+    dispatch(meRequestSuccess(newData));
+}
+
+export const loadNewRank = (): ThunkAction<void, RootState, unknown, Action<string>> => (dispatch, getState) => {
+    const token = getState().token;
+    const URL = getState().url;
+    const userTg = getState().userTg.id;
+    
+    if(token) {
+        axios.get(`${URL}/api/v1/users/rank/neighbours?limit=1`,
+            {
+                headers: {
+                    "Authorization": `TelegramToken ${token}`
+                }
+            }
+        ).then(resp => {
+            const data = resp.data;
+            if(data.length != 0) {
+                
+                for(let i = 0; i<data.length; i++) {
+                    if (Number(data[i].tg_id) === Number(userTg)) {
+                        dispatch<any>(updateRank(Number(data[i].rank)))
+                    }
+                }
+            }
+        })
+    }
+}
+
+
+export const updateMyAuctions = (data: Array<IAuctionItem>, type: string): ThunkAction<void, RootState, unknown, Action<string>> => (dispatch, getState) => {
+    const meData = getState().me.data;
+    let newData = meData;
+
+    if(type === 'top') {
+        newData.topAuctions = data;
+    } else {
+        newData.loseAuctions = data;
+    }
+
     dispatch(meRequestSuccess(newData));
 }

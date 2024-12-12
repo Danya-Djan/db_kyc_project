@@ -65,6 +65,8 @@ export function SectionsBlock({ mult }: ISectionsBlock) {
       img: 'assets/Chain.png'
     },
   ];
+
+  //<UsersIcons imgs={topImgs} size={16}/>
   
   return (
     <div className={styles.sectionContainer}>
@@ -75,7 +77,6 @@ export function SectionsBlock({ mult }: ISectionsBlock) {
               <span className={styles.rank1}>#</span>
               <span>{isDev ? '?' : (userRank ? formatNumber(userRank) : '?')}</span>
             </div>
-            <UsersIcons imgs={topImgs} size={16}/>
           </div>}
         </CardSection>
         <CardSection title='Множитель' onClick={() => { setClose(false) }}>

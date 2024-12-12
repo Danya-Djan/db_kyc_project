@@ -40,7 +40,7 @@ export function Timer({initTime}: ITimer) {
       </div>
       <div className={styles.dot}></div>
       <div className={styles.block}>
-        <p className={styles.value} style={ETextStyles.InSb14120}>{min}</p>
+        <p className={styles.value} style={ETextStyles.InSb14120}>{min.toString().length === 1 ? `0${min}` : min}</p>
         <p className={styles.text} style={ETextStyles.RwRg12120}>мин</p>
       </div>
       <div className={styles.dot}></div>

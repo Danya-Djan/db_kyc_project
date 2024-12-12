@@ -26,9 +26,11 @@ interface IPointsZoom {
   setCloseAutoClick(a: boolean): void,
   sameCoords: boolean,
   setSameCoords(a: boolean): void,
+  setSameInterval(a: boolean): void,
+  sameInterval: boolean,
 }
 
-export function PointsZoom({ points, sameCoords, setSameCoords, setCloseAutoClick, setMult, setClose, setCoins, className, closePointsAnim, setClosePointsAnim, setCloseError, setEnergy, clickTime, setClickTime }: IPointsZoom) {
+export function PointsZoom({ points, sameInterval, setSameInterval, sameCoords, setSameCoords, setCloseAutoClick, setMult, setClose, setCoins, className, closePointsAnim, setClosePointsAnim, setCloseError, setEnergy, clickTime, setClickTime }: IPointsZoom) {
   const [open, setOpen] = useState(true);
   const node = document.querySelector('#modal_root');
   const urlClick = useAppSelector<string>(state => state.urlClick);
@@ -36,6 +38,7 @@ export function PointsZoom({ points, sameCoords, setSameCoords, setCloseAutoClic
   const [sizeHand, setSizeHand] = useState(30);
   const energy = Number(useAppSelector<string | undefined>(state => state.me.data.energy));
   const userData = useAppSelector<IUserData>(state => state.me.data);
+  const URL = useAppSelector<string>(state => state.url);
   if (!node) return null;
   const dispatch = useDispatch();
 
@@ -43,6 +46,7 @@ export function PointsZoom({ points, sameCoords, setSameCoords, setCloseAutoClic
     const initPoints = points;
     const clickTimeInit = clickTime;
     let initSameCoords = sameCoords;
+    let initSameInterval = sameInterval;
     let avtTime = 500;
     if (points > 1) {
       avtTime = clickTimeInit / (initPoints - 1);
@@ -50,10 +54,21 @@ export function PointsZoom({ points, sameCoords, setSameCoords, setCloseAutoClic
 
     setClickTime(0);
     setSameCoords(false);
+  
+    if ((avtTime < 100 && initSameCoords) || (initSameInterval) && initPoints > 20) {
 
-    if (avtTime < 100 && initSameCoords && points > 40) {
+      /*axios.post(`${URL}/api/v1/users/warn/`, {}, {
+        headers: {
+          "Authorization": `TelegramToken ${token}`
+        }
+      }).then(resp => {
+        console.log(resp);
+      }).catch(err => {
+        //console.log(err)
+      })*/
       sendAutoClickData(userData.tgId, points, avtTime);
       setCloseAutoClick(false);
+      setSameInterval(false);
       const returnEnergy = energy + initPoints;
       setEnergy(returnEnergy);
       dispatch<any>(updateEnergyRequestAsync(returnEnergy));

@@ -1,12 +1,17 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './clickerfooter.module.css';
 import { ClickerBtnFooter } from '../ClickerBtnFooter';
 import { EIcons, Icon } from '../../Icons';
 import { useNavigate } from 'react-router-dom';
+import { isWhiteList } from '../../../utils/isWhiteList';
 
 export function ClickerFooter() {
   const navigate = useNavigate();
-  const isDev = true;
+  const [isDev, setIsDev] = useState(true);
+
+  useEffect(() => {
+    setIsDev(!isWhiteList());
+  }, []);
 
   return (
     <div className={styles.container}>

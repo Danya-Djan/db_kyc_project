@@ -18,12 +18,17 @@ interface IResultAuctionPopup {
 export function ResultAuctionPopup({ prevBet, prevMyBet, newBet, setBet, setClose, setCloseBetWindow, setPrevBet }: IResultAuctionPopup) {
   const [diff, setDiff] = useState(0);
   const [prevBetOld, setPrevBetOld] = useState(prevBet);
+  const [prevMyOldBet, setPrevMyOld] = useState(prevMyBet);
 
 
   useEffect(() => {
-    setDiff(newBet - prevMyBet);
+    if (prevMyOldBet > 0) {
+      setDiff(newBet - prevMyOldBet);
+    } else {
+      setDiff(newBet - Number(prevBetOld));
+    }
     setBet(newBet);
-    setPrevBet(newBet.toString())
+    setPrevBet(newBet.toString());
   }, []);
 
   const onClick = () => {
@@ -40,7 +45,7 @@ export function ResultAuctionPopup({ prevBet, prevMyBet, newBet, setBet, setClos
         <div className={styles.icon} style={{backgroundImage: 'url("assets/Money.png")'}}></div>
       </div>
       <div className={styles.text} style={ETextStyles.InSb24100}>
-        Вы <span>увеличили</span> ставку <span>{`на ${diff}`}</span> {declension(diff, 'коин', 'коина', 'коинов')}
+        Вы <span>{prevMyOldBet > 0 ? 'увеличили' : 'перебили'}</span> ставку <span>{`на ${diff.toFixed(2)}`}</span> {declension(diff.toFixed(2), 'коин', 'коина', 'коинов')}
       </div>
       <div className={styles.cards}>
         <div className={styles.card}>

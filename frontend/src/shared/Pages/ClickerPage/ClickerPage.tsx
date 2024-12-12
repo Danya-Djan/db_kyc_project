@@ -11,6 +11,8 @@ import { useWindowSize } from 'usehooks-ts';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { ModalWindow } from '../../ModalWindow';
 import { DevPopup } from '../../Elements/DevPopup';
+import { AuctionMainPopups } from '../../Auction/AuctionMainPopups';
+import { useAuctionData } from '../../hooks/useAuctionData';
 
 interface IClickerPageInterface {
   name: string,
@@ -33,6 +35,17 @@ export function ClickerPage({ name, points, img, energy }: IClickerPageInterface
   const [clickTime, setClickTime] = useState(0);
   const [closeAutoClick, setCloseAutoClick] = useState(true);
   const [sameCoords, setSameCoords] = useState(false);
+  const [sameInterval, setSameInterval] = useState(false);
+  useAuctionData();
+
+  useEffect(() => {
+    const html = document.querySelector('html');
+
+    if(html) {
+      html.style.overflow = 'scroll';
+    }
+
+  }, []);
  
   useEffect(() => {
     setMult(savedMult);
@@ -57,13 +70,13 @@ export function ClickerPage({ name, points, img, energy }: IClickerPageInterface
   return (
     <div className={styles.container}>
       <div className={styles.records}>
-        {!closePoints && <PointsZoom sameCoords={sameCoords} setSameCoords={setSameCoords} setCloseAutoClick={setCloseAutoClick} setClickTime={setClickTime} clickTime={clickTime} setMult={setMult} setEnergy={setInitEnergy} setCloseError={setCloseError} setCoins={setCoins} points={coins} setClosePointsAnim={setClosePointsAnim} setClose={setClosePoints} className={styles.pointsAnim} closePointsAnim={closePointsAnim}/>}
+        {!closePoints && <PointsZoom sameInterval={sameInterval} setSameInterval={setSameInterval} sameCoords={sameCoords} setSameCoords={setSameCoords} setCloseAutoClick={setCloseAutoClick} setClickTime={setClickTime} clickTime={clickTime} setMult={setMult} setEnergy={setInitEnergy} setCloseError={setCloseError} setCoins={setCoins} points={coins} setClosePointsAnim={setClosePointsAnim} setClose={setClosePoints} className={styles.pointsAnim} closePointsAnim={closePointsAnim}/>}
         <Profile name={name} className={styles.profile} img={img}/>
         <h1 style={ETextStyles.RwSb24100} className={styles.title}>Мои рекорды</h1>
         <SectionsBlock mult={mult}/>
       </div>
       <div className={styles.clicker} style={{height: `${height > 670 && 'calc(100vh - 355px)'}`}}>
-        <ClickerBtn closeAutoClick={closeAutoClick} sameCoords={sameCoords} setSameCoords={setSameCoords} clickTime={clickTime} setClickTime={setClickTime} setEnergy={setInitEnergy} coins={coins} setCoins={setCoins} energy={initEnergy} setMult={setMult}/>
+        <ClickerBtn setSameInterval={setSameInterval} closeAutoClick={closeAutoClick} sameCoords={sameCoords} setSameCoords={setSameCoords} clickTime={clickTime} setClickTime={setClickTime} setEnergy={setInitEnergy} coins={coins} setCoins={setCoins} energy={initEnergy} setMult={setMult}/>
       </div>
       <ClickerFooter />
       {styleIndex != 0 && <div>
@@ -75,6 +88,7 @@ export function ClickerPage({ name, points, img, energy }: IClickerPageInterface
       {!closeAutoClick && <ModalWindow removeBtn={true} setCloseAnimOut={setAnimClose} closeAnimOut={animClose} setClose={setCloseAutoClick} modalBlock={
         <DevPopup setClose={setAnimClose} title='Кажется, вы используете автокликер...' text='Ваши клики не отправлены. Давайте играть честно.' img='assets/police.gif'/>
       } />}
+      <AuctionMainPopups/>
     </div>
   );
 }

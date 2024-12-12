@@ -114,3 +114,13 @@
     border-radius: 15px;
     overflow: hidden;
 }
+
+.winnersNumber {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 27px;
+    height: 27px;
+    border-radius: 50%;
+    background-color: var(--grey34);
+}

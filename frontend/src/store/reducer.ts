@@ -9,6 +9,8 @@ import { RankState, friendsReducer } from './friends/reducer';
 import { FRIENDS_REQUEST, FRIENDS_REQUEST_ERROR, FRIENDS_REQUEST_SUCCESS } from './friends/actions';
 import { RANK_REQUEST, RANK_REQUEST_ERROR, RANK_REQUEST_SUCCESS } from './rank/actions';
 import { rankReducer } from './rank/reducer';
+import { AuctionState, auctionReducer } from './auction/reducer';
+import { AUCTION_REQUEST, AUCTION_REQUEST_ERROR, AUCTION_REQUEST_SUCCESS } from './auction/actions';
 
 export type RootState = {
   url: string,
@@ -22,6 +24,7 @@ export type RootState = {
   mult: number,
   friends: RankState,
   rank: RankState,
+  auction: AuctionState
 };
 
 //'http://127.0.0.1:8000'
@@ -51,6 +54,11 @@ const initialState: RootState = {
     data: []
   },
   rank: {
+    loading: false,
+    error: '',
+    data: []
+  },
+  auction: {
     loading: false,
     error: '',
     data: []
@@ -107,6 +115,13 @@ export const rootReducer: Reducer<RootState> = (state = initialState, action) =>
       return {
         ...state,
         rank: rankReducer(state.rank, action)
+      };
+    case AUCTION_REQUEST:
+    case AUCTION_REQUEST_SUCCESS:
+    case AUCTION_REQUEST_ERROR:
+      return {
+        ...state,
+        auction: auctionReducer(state.auction, action)
       };
     default:
       return state;

@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import styles from './auctionpopup.module.css';
 import { ETextStyles } from '../../texts';
-import { PersonIcon } from '../../Elements/PersonIcon';
-import { PointsBlock } from '../../Elements/PointsBlock';
 import { Button } from '../../Button';
 import { EIcons } from '../../Icons';
 import { declension } from '../../../utils/declension';
 import { useNavigate } from 'react-router-dom';
 import { ProductCard } from '../ProductCard';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { useDispatch } from 'react-redux';
+import axios from 'axios';
+import { updatePointsRequestAsync } from '../../../store/me/actions';
+import { updateAuction } from '../../../store/auction/actions';
 
 interface IAuctionPopup {
+  auctionId: string,
   setClose(a: boolean): void,
   setLead(a: boolean): void,
   img: string,
@@ -17,16 +21,23 @@ interface IAuctionPopup {
   prevBet: string,
   prevUserImg: string,
   setBet(a: number): void,
-  setCloseResultPopup(a: boolean): void
+  setCloseResultPopup(a: boolean): void,
+  commission: number,
+  setCloseErrorBet(a: boolean): void,
+  myBet: number
 }
 
-export function AuctionPopup({ setClose, img, name, prevBet, prevUserImg, setBet, setLead, setCloseResultPopup }: IAuctionPopup) {
+export function AuctionPopup({ setClose, setCloseErrorBet, auctionId, img, name, prevBet, prevUserImg, setBet, setLead, setCloseResultPopup, commission, myBet }: IAuctionPopup) {
   const [value, setValue] = useState<string>('');
   const [disabled, setDis] = useState(true);
   const [autoBet, setAutoBet] = useState(false);
   const navigate = useNavigate();
-  const percent = 5;
-  const userPoints = 1000;
+  const [percent, setPercent] = useState(commission);
+  const userPoints = Number(useAppSelector<string | undefined>(state=>state.me.data.points));
+  const URL = useAppSelector<string>(state=>state.url);
+  const token = useAppSelector<string>(state => state.token);
+  const dispatch = useDispatch();
+
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let newValue = event.target.value;
@@ -41,28 +52,43 @@ export function AuctionPopup({ setClose, img, name, prevBet, prevUserImg, setBet
   }
 
   const newBet = () => {
-    setBet(Math.floor((1 + percent / 100) * Number(value)));
+    const bet = Number(value);
     setClose(true);
-    setLead(true);
 
-    const timer = setInterval(() => {
-      setCloseResultPopup(false);
-      clearTimeout(timer);
-    }, 400);
-    
+    if (token) {
+      axios.post(`${URL}/api/v1/auction/auction/${auctionId}/place-bet/?value=${bet}`, {},
+        {
+          headers: {
+            "Authorization": `TelegramToken ${token}`
+          }
+        }
+      ).then(resp => {
+        const data = resp.data;
+        dispatch<any>(updatePointsRequestAsync());
+        dispatch<any>(updateAuction(auctionId));
+        setBet(bet);
+        setLead(true);
+        const timer = setInterval(() => {
+          setCloseResultPopup(false);
+          clearTimeout(timer);
+        }, 400);
+      }).catch(err => {
+        setCloseErrorBet(false);
+      })
+    }
   };
 
   return (
     <div>
       <h2 className={styles.title} style={ETextStyles.RwSb24100}>Сделать ставку</h2>
       <ProductCard name={name} img={img} bet={prevBet} personImg={prevUserImg} className={styles.card} />
-      {!autoBet ? <Button onClick={() => { setAutoBet(true), setValue((Number(prevBet) + 5).toString()), setDis(false) }} text='Сразу перебить ставку' className={styles.btnFirst} icon={<div className={styles.icon} style={{ backgroundImage: "url('assets/Rocket.png')" }}></div>} /> :
+      {!autoBet ? <Button onClick={() => { setAutoBet(true), setValue(Number(Number((1 + percent / 100) * Number(prevBet)).toFixed(2)).toString()), setDis(false) }} text='Сразу перебить ставку' className={styles.btnFirst} icon={<div className={styles.icon} style={{ backgroundImage: "url('assets/Rocket.png')" }}></div>} /> :
         <button style={ETextStyles.InBd14120} className={styles.btnCancel} onClick={() => setClose(true)}>Не перебивать</button>
       }
       <p className={styles.descr} style={ETextStyles.RwRg10140}>Наши алгоритмы автоматически рассчитают стоимость, чтобы ваша ставка стала самой высокой</p>
       <h3 className={styles.title2} style={ETextStyles.InSb14120}>{!autoBet ? 'Ввести свою цену' : 'Цена, чтобы перебить ставку'}</h3>
       <input style={ETextStyles.InSb14120} className={styles.input} value={value} type="text" onChange={handleChange} inputMode="numeric" />
-      {(Math.floor((1 + percent / 100) * Number(value)) < userPoints) ? ((Number(value) < Number(prevBet) && value.length > 0) ? 
+      {(Number(Number((1 + percent / 100) * Number(value))) - myBet < userPoints) ? ((Number(value) < Number(prevBet) && value.length > 0) ? 
         <button className={styles.btnForbidden}>
           <p style={ETextStyles.InBd14120}>Ставка должна быть больше</p>
           <p style={ETextStyles.InRg12140} className={styles.textForbidden}>Нельзя сделать ставку меньше предыдущей</p>
@@ -70,7 +96,7 @@ export function AuctionPopup({ setClose, img, name, prevBet, prevUserImg, setBet
       : <Button onClick={() => newBet()} disabled={disabled} text={disabled ? 'Перебить ставку' : <div className={styles.newBtn}>
           <p>Перебить ставку</p>
           <div className={styles.btnText}>
-            <p style={ETextStyles.InRg12140}>{`${declension(value, 'коин', 'коина', 'коинов', true)} + ${percent}% = ${declension(Math.floor((1 + percent / 100) * Number(value)), 'коин', 'коина', 'коинов', true)}`}</p>
+            <p style={ETextStyles.InRg12140}>{`${declension(value, 'коин', 'коина', 'коинов', true)} + ${percent}% = ${declension(Number(Number((1 + percent / 100) * Number(value)).toFixed(2)), 'коин', 'коина', 'коинов', true)}`}</p>
             <div className={styles.icon} style={{ backgroundImage: "url('assets/btnIcon.png')" }}></div>
           </div>
         </div>}

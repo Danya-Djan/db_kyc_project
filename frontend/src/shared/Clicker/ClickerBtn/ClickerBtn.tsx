@@ -17,10 +17,11 @@ interface IClickerBtn {
   clickTime: number,
   sameCoords: boolean,
   setSameCoords(a: boolean): void,
-  closeAutoClick: boolean
+  closeAutoClick: boolean,
+  setSameInterval(a: boolean): void,
 }
 
-export function ClickerBtn({ setCoins, closeAutoClick, energy, setMult, coins, setEnergy, setClickTime, clickTime, setSameCoords }: IClickerBtn) {
+export function ClickerBtn({ setCoins, setSameInterval, closeAutoClick, energy, setMult, coins, setEnergy, setClickTime, clickTime, setSameCoords }: IClickerBtn) {
   const [fill, setFill] = useState(0);
   const [size, setSize] = useState(240);
   const circumference = 2 * Math.PI * 125;
@@ -33,6 +34,7 @@ export function ClickerBtn({ setCoins, closeAutoClick, energy, setMult, coins, s
   const dispatch = useDispatch();
   const [prevClickTime, setPrevClickTime] = useState(0);
   const [prevCoords, setPrevCoords] = useState(0);
+  const [clickInterval, setClickInterval] = useState(0);
 
   useEffect(() => {
     if(!closeAutoClick) {
@@ -78,9 +80,17 @@ export function ClickerBtn({ setCoins, closeAutoClick, energy, setMult, coins, s
     setPrevCoords(coords);
 
     const currentTime = Date.now();
-    const clickInterval = currentTime - prevClickTime;
+    const clickIntervalInit = currentTime - prevClickTime;
+    if (clickInterval != 0) {
+      if (clickInterval === clickIntervalInit) {
+        setSameInterval(true)
+      } else {
+        setSameInterval(false)
+      }
+    }
+    
     if(prevClickTime != 0) {
-      setClickTime(clickTime + clickInterval);
+      setClickTime(clickTime + clickIntervalInit);
     }
     setPrevClickTime(currentTime);
 
@@ -136,7 +146,7 @@ export function ClickerBtn({ setCoins, closeAutoClick, energy, setMult, coins, s
           {gradient}
         </defs>
       </svg>
-      {!close && !closeAutoClick && <ModalWindow setCloseAnimOut={setClose} removeBtn={true} setClose={setClose} modalBlock={
+      {!close && closeAutoClick && <ModalWindow setCloseAnimOut={setClose} removeBtn={true} setClose={setClose} modalBlock={
         <ClickerPopup title='Кнопка перегрелась' cards={hotCards} setClose={setClose} isBtn={true}/>
       } />}
     </div>

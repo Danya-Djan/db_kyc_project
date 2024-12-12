@@ -4,6 +4,7 @@ import { ETextStyles } from '../../texts';
 import { ProductCard } from '../ProductCard';
 import { Button } from '../../Button';
 import { useNavigate } from 'react-router-dom';
+import { generateRandomString } from '../../../utils/generateRandom';
 
 interface IProduct {
   name: string,
@@ -20,7 +21,7 @@ export function AuctionTopPopup({ items, setClose }: IAuctionTopPopup) {
   const navigate = useNavigate();
 
   return (
-    <div>
+    <div className='top'>
       <div className={styles.iconBlock}>
         <div className={styles.icon} style={{ backgroundImage: "url('assets/Fire.png')" }}></div>
       </div>
@@ -29,7 +30,7 @@ export function AuctionTopPopup({ items, setClose }: IAuctionTopPopup) {
       <h3 className={styles.title2} style={ETextStyles.RwSb18120}>Аукционы, в которых вы лидируете:</h3>
       <div className={styles.cards}>
         {items.map(item => {
-          return <ProductCard name={item.name} img={item.img} bet={item.bet} />
+          return <ProductCard key={ generateRandomString() } name={item.name} img={item.img} bet={item.bet} />
         })}
       </div>
       <Button text='Продолжить кликать' onClick={() => { navigate('/'); setClose(true)}}/>
