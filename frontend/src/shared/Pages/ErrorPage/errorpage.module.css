@@ -1,0 +1,24 @@
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    height: 100vh;
+}
+
+.title {
+    margin-bottom: 12px;
+    color: var(--primary);
+    text-align: center;
+}
+
+.text {
+    margin-bottom: 32px;
+    text-align: center;
+}
+
+.detail {
+    margin-top: 20px;
+    text-align: center;
+}

@@ -1,0 +1,90 @@
+.container {
+    z-index: 10;
+    position: fixed;
+    max-width: 75%;
+    top: 20px;
+    right: 0;
+    padding: 12px;
+    border-radius: 16px 0 0 16px;
+    border: 2px solid var(--grey46);
+    background: rgba(0, 0, 0, 0.90);
+    backdrop-filter: blur(0.5px);
+    overflow: hidden;
+}
+
+.back {
+    z-index: 11;
+    top: 0;
+    left: 0;
+    position: absolute;
+    width: 0;
+    height: 100%;
+    /*background-color: var(--grey24);*/
+    background-color: rgba(255, 255, 255, 0.1);
+    animation-name: openBack;
+    animation-delay: 0.5s;
+    animation-duration: 4.5s;
+    animation-timing-function: ease-out;
+}
+
+.title {
+    margin-bottom: 8px;
+    -webkit-text-fill-color: transparent;
+    background-clip: text !important;
+    background: var(--gradientPrimary);
+}
+
+.content {
+    position: relative;
+    z-index: 12;
+}
+
+.animationOpen {
+    animation-name: open;
+    animation-duration: 0.3s;
+    animation-timing-function: ease-out;
+}
+
+.animationClose {
+    animation-name: close;
+    animation-duration: 0.4s;
+    animation-timing-function: ease-in;
+}
+
+@keyframes openBack {
+    0% {
+        width: 0;
+    }
+    
+    100% {
+        width: 100%;
+    }
+}
+
+@keyframes open {
+    0% {
+        right: -500px;
+        opacity: 0;
+    }
+
+    100% {
+        right: 0;
+        opacity: 1;
+    }
+}
+
+@keyframes close {
+    0% {
+        right: 0;
+        opacity: 1;
+    }
+
+    80% {
+        opacity: 0.8;
+    }
+
+    100% {
+        right: -500px;
+        opacity: 0;
+    }
+}

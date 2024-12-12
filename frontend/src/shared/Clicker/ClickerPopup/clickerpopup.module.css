@@ -1,0 +1,16 @@
+.title {
+    margin-bottom: 24px;
+    width: calc(100% - 44px);
+}
+
+.cards {
+    margin-bottom: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.text {
+    margin-top: -24px;
+    margin-bottom: 30px;
+}

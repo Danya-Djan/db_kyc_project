@@ -1,0 +1,50 @@
+.icon {
+    margin-bottom: 12px;
+    width: 64px;
+    height: 64px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-repeat: no-repeat;
+}
+
+.topIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.text {
+    margin-bottom: 32px;
+    width: 100%;
+    text-align: center;
+}
+
+.text span {
+    color: var(--primary);
+}
+
+.cards {
+    margin-bottom: 32px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 50%;
+    height: 112px;
+    background-color: var(--grey12);
+    border-radius: 10px;
+}
+
+.card p {
+    color: var(--greyA4);
+}
+
+.colorPoints div {
+    color: var(--primary);
+}

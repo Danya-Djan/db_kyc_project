@@ -1,0 +1,29 @@
+.btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 13px;
+    border-radius: 30px;
+    background: var(--gradientPrimary);
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--grey34);
+}
+
+.dis {
+    background: var(--greyA4);
+}
+
+.stroke {
+    background: none;
+    border: 2px solid var(--primary);
+}
+
+.stroke .content {
+    color: var(--white);
+}

@@ -1,0 +1,36 @@
+.card {
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 30px;
+    border: 1px solid var(--grey46);
+    gap: 5px;
+}
+
+.left {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.right {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.productName {
+    width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.points div {
+    color: var(--primary);
+}
+
+.productImg {
+    flex-shrink: 0;
+}

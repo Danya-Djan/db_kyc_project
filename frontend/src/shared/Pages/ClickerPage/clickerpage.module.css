@@ -1,0 +1,48 @@
+.container {
+    position: relative;
+}
+
+.records {
+    z-index: 3;
+    position: relative;
+    margin-bottom: 14px;
+    padding: 12px;
+    border-radius: 24px;
+    background-color: rgba(255, 255, 255, 0.1);
+}
+
+.records::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    border-radius: 24px;
+    backdrop-filter: blur(25px);
+}
+
+.title {
+    margin-bottom: 14px;
+}
+
+.clicker {
+    position: relative;
+    z-index: 5;
+    margin-bottom: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile {
+    margin-bottom: 8px;
+}
+
+/*.pointsAnim {
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+}*/

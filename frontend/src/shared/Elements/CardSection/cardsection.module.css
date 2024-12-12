@@ -1,0 +1,24 @@
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 14px 12px;
+    min-height: 70px;
+    width: 100%;
+    /*background-color: var(--grey12);*/
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+}
+
+.title {
+    width: calc(100% - 26px);
+    color: var(--greyA4);
+}
+
+.arrow {
+    position: absolute;
+    top: 15px;
+    right: 16px;
+}
