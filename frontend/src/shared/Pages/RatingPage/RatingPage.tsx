@@ -6,13 +6,11 @@ import { generateRandomString } from '../../../utils/generateRandom';
 import { useRankData } from '../../hooks/useRankData';
 import { Spinner } from '../../Elements/Spinner';
 import { ErrorPage } from '../ErrorPage';
-import { checkWhiteList } from '../../hooks/checkWhiteList';
 
 export function RatingPage() {
   const { dataRank, loadingRank, errorRank } = useRankData();
   const [topBlock, setTopBlock] = useState(<div></div>);
   const [otherBlock, setOtherBlock] = useState(<div></div>);
-  checkWhiteList();
 
   useEffect(() => {
     if (dataRank.length != 0) {

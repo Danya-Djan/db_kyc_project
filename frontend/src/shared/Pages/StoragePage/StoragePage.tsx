@@ -17,13 +17,8 @@ export function StoragePage() {
   const [page, setPage] = useState('storage');
   const refLink = `https://t.me/sapphirecrown_bot?start=user_${userId}`;
   const [showNotif, setShow] = useState(false);
-  const [isDev, setIsDev] = useState(true);
+  const [isDev, setIsDev] = useState(false);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const whiteList = isWhiteList();
-    setIsDev(!whiteList)
-  }, []);
 
   return (
     <div>

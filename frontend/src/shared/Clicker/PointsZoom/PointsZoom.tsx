@@ -9,6 +9,7 @@ import { checkIOS } from '../../../utils/checkMobile';
 import axios from 'axios';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { saveMult } from '../../../store/mult';
+import { sendAutoClickData } from '../../hooks/sendAutoClickData';
 
 interface IPointsZoom {
   points: number,
@@ -47,13 +48,11 @@ export function PointsZoom({ points, sameCoords, setSameCoords, setCloseAutoClic
       avtTime = clickTimeInit / (initPoints - 1);
     }
 
-    //block function
-    initSameCoords = false;
-
     setClickTime(0);
     setSameCoords(false);
 
-    if (avtTime < 100 && initSameCoords && points > 30) {
+    if (avtTime < 100 && initSameCoords && points > 40) {
+      sendAutoClickData(userData.tgId, points, avtTime);
       setCloseAutoClick(false);
       const returnEnergy = energy + initPoints;
       setEnergy(returnEnergy);

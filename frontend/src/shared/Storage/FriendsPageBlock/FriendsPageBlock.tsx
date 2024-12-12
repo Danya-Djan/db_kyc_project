@@ -7,15 +7,9 @@ import { useFriendsData } from '../../hooks/useFriendsData';
 import { ErrorPage } from '../../Pages/ErrorPage';
 import { Spinner } from '../../Elements/Spinner';
 
-interface IRating {
-  name: string,
-  score: string
-}
-
 export function FriendsPageBlock() {
   const { dataFriends, loadingFriends, errorFriends } = useFriendsData();
   const [ratingBlock, setRatingBlock] = useState(<div></div>);
-  const loading = true;
 
   useEffect(() => {
     if (dataFriends.length != 0) {

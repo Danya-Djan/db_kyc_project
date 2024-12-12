@@ -3,5 +3,13 @@
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-color: var(--white);
+    background-color: var(--grey35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.letter {
+    color: var(--primary);
+    font-weight: 700;
 }

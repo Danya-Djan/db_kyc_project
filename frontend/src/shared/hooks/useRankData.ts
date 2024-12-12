@@ -3,7 +3,6 @@ import { useEffect } from 'react';
 import { useAppSelector } from './useAppSelector';
 import { IUserRank } from '../../store/friends/actions';
 import { rankRequestAsync } from '../../store/rank/actions';
-import { isWhiteList } from '../../utils/isWhiteList';
 
 export function useRankData() {
     const dataRank = useAppSelector<Array<IUserRank>>(state => state.rank.data);
@@ -13,10 +12,7 @@ export function useRankData() {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        const whiteList = isWhiteList();
-        if(whiteList) {
-            dispatch<any>(rankRequestAsync());
-        }
+        dispatch<any>(rankRequestAsync());
     }, [token]);
 
     return { dataRank, loadingRank, errorRank };

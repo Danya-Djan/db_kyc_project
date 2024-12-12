@@ -32,7 +32,7 @@ export function RatingCard({number, name, score, index, friend=false, img}: IRat
           <Icon icon={EIcons.MedalThird} />
         </div>}
         {(order > 3 ) && <div className={styles.number} style={ETextStyles.InSb14120}>{order}</div>}
-        <PersonIcon size={20} img={img} className={styles.img}/>
+        <PersonIcon size={20} img={img} className={styles.img} letter={name[0]}/>
         <p style={ETextStyles.RwSb14120} className={styles.name}>{name}</p>
       </div>
       <PointsBlock points={score}/>

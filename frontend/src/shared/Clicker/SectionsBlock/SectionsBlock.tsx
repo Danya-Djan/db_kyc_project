@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 import { UsersIcons } from '../../Elements/UsersIcons';
 import { formatNumber } from '../../../utils/formatNumber';
 import { useAppSelector } from '../../hooks/useAppSelector';
-import { isWhiteList } from '../../../utils/isWhiteList';
 import { IUserRank } from '../../../store/friends/actions';
 
 interface ISectionsBlock {
@@ -22,15 +21,10 @@ export function SectionsBlock({ mult }: ISectionsBlock) {
   const referralStorage = Number(useAppSelector<string | undefined>(state => state.me.data.referralStorage));
   const maxReferralStorage = useAppSelector<number>(state => state.me.data.maxStorage);
   const [referralPercent, serReferralPercent] = useState(0);
-  const [isDev, setIsDev] = useState(true);
+  const [isDev, setIsDev] = useState(false);
   const userRank = useAppSelector<number | undefined>(state => state.me.data.rank);
   const rankData = useAppSelector<Array<IUserRank>>(state => state.rank.data);
   const [topImgs, setTopImgs] = useState<Array<string>>([]);
-
-  useEffect(() => {
-    const whiteList = isWhiteList();
-    setIsDev(!whiteList)
-  }, []);
 
   useEffect(() => {
     const imgs:Array<string> = [];
