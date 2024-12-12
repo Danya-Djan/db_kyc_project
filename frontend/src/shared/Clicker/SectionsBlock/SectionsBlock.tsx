@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './sectionsblock.module.css';
 import { CardSection } from '../../Elements/CardSection';
 import { ETextStyles } from '../../texts';
@@ -8,30 +8,40 @@ import { ClickerPopup } from '../ClickerPopup';
 import { useNavigate } from 'react-router-dom';
 import { UsersIcons } from '../../Elements/UsersIcons';
 import { formatNumber } from '../../../utils/formatNumber';
-import { DevPopup } from '../../Elements/DevPopup';
+import { useAppSelector } from '../../hooks/useAppSelector';
 
 interface ISectionsBlock {
   mult:number;
 }
 
 export function SectionsBlock({ mult }: ISectionsBlock) {
-  const scaleRef = 70;
   const [close, setClose] = useState(true);
   const navigate = useNavigate();
-  const [closeAnimOut, setCloseAnimOut] = useState(false);
-  const [closeDev, setCloseDev] = useState(true);
+  const referralStorage = Number(useAppSelector<string | undefined>(state => state.me.data.referralStorage));
+  //const referralStorage = 500;
+  const maxReferralStorage = useAppSelector<number>(state => state.me.data.maxStorage);
+  const [referralPercent, serReferralPercent] = useState(0);
+
+  useEffect(() => {
+    if(referralStorage >= maxReferralStorage) {
+      serReferralPercent(100);
+    } else {
+      serReferralPercent(referralStorage / maxReferralStorage * 100);
+    }
+
+  }, [referralStorage, maxReferralStorage]);
 
   const isDev = true;
 
   const multipCards = [
     {
       title: 'Что он делает',
-      text: <span>Увеличивает получение баллов с&nbsp;одного клика в&nbsp;столько раз, сколько указано в&nbsp;рамке внизу экрана.</span>,
+      text: <span>Увеличивает получение баллов с&nbsp;одного клика в&nbsp;столько раз, сколько указано в&nbsp;рамке.</span>,
       img: 'assets/Rocket.png'
     },
     {
       title: 'Как его увеличить',
-      text: <span>Чем выше концентрация&nbsp;&mdash; клики в&nbsp;час, тем выше мультипликатор, он&nbsp;рассчитывается по&nbsp;формуле.</span>,
+      text: <span>Чем выше концентрация&nbsp;&mdash; клики в&nbsp;час, тем выше множитель, он&nbsp;рассчитывается по&nbsp;формуле.</span>,
       img: 'assets/Monocle.png'
     },
     {
@@ -44,7 +54,7 @@ export function SectionsBlock({ mult }: ISectionsBlock) {
   return (
     <div className={styles.sectionContainer}>
       <div className={styles.leftContainer}>
-        <CardSection title='Место в топе' onClick={() => {!isDev ? navigate('/rating') : setCloseDev(false)}}>
+        <CardSection title='Место в топе' onClick={() => {!isDev ? navigate('/rating') : navigate('/dev?type=rating')}}>
           {<div className={`${styles.bottomRank} ${isDev ? styles.dev : ''}`}>
             <div style={ETextStyles.InSb12120}>
               <span className={styles.rank1}>#</span>
@@ -61,21 +71,18 @@ export function SectionsBlock({ mult }: ISectionsBlock) {
         </CardSection>
       </div>
       <CardSection title='Реферальное хранилище' className={styles.rigthEl} onClick={() => { navigate('/referral') }}>
-        {<div className={isDev ? styles.dev : ''}>
-          <PointsBlock points={formatNumber(800)} className={styles.scalePoints} />
+        {<div>
+          <PointsBlock points={formatNumber(referralStorage.toFixed(2))} className={styles.scalePoints} />
           <div className={styles.scaleContainer}>
-            <div className={styles.scale} style={{ width: `${scaleRef}px` }}></div>
+            <div className={`${styles.scale}  ${referralPercent === 100 ? styles.scaleFull : ''}`} style={{ width: `${referralPercent}%` }}></div>
           </div>
-          <p className={styles.scaleText}>
-            Хранилище заполнено, заберите коины
+          <p className={`${styles.scaleText} ${referralPercent === 100 ? styles.textFull : ''}`}>
+            {referralPercent === 100 ? 'Хранилище заполнено, заберите коины' : 'Когда хранилище заполнится, вы сможете забрать баллы'}
           </p>
         </div>}
       </CardSection>
       {!close && <ModalWindow setCloseAnimOut={setClose} setClose={setClose} modalBlock={
         <ClickerPopup title='Что такое множитель' cards={multipCards} setClose={setClose}/>
-      } />}
-      {!closeDev && <ModalWindow removeBtn={true} setCloseAnimOut={setCloseAnimOut} closeAnimOut={closeAnimOut} setClose={setCloseDev} modalBlock={
-        <DevPopup setClose={setCloseAnimOut} type='dev' />
       } />}
     </div>
   );

@@ -87,6 +87,12 @@ export const ETextStyles = {
         fontSize: '14px',
         lineHeight: '120%',
     },
+    InRg16130: {
+        fontFamily: 'Inter, sans-serif',
+        fontWeight: '400',
+        fontSize: '16px',
+        lineHeight: '130%',
+    },
     //SemiBold
     InSb10120: {
         fontFamily: 'Inter, sans-serif',

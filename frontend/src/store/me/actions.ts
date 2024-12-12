@@ -9,8 +9,10 @@ export interface IUserData {
     username?: string;
     name?: string;
     avatar?: string;
-    points?: string
+    points?: string;
     energy?: string;
+    referralStorage?: string;
+    maxStorage: number;
 }
 
 export const ME_REQUEST = 'ME_REQUEST';
@@ -53,9 +55,15 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
     const firstName = getState().userTg.firstName;
     const secondName = getState().userTg.lastName;
     const token = getState().token;
-    const URL = getState().url;
+    const Url = getState().url;
     const URLClick = getState().urlClick;
-    const referral = getState().referral;
+    //const referral = getState().referral;
+    let referral = '';
+    const currentUrl = new URL(window.location.href);
+    const referredBy = currentUrl.searchParams.get("referred_by");
+    if (referredBy) {
+        referral = referredBy;
+    }
 
     const firstClick = (token: string) => {
         axios.post(`${URLClick}/api/v1/click/`,
@@ -77,9 +85,9 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
         dispatch(meRequest());
         let urlUser = '';
         if (referral.length != 0) {
-            urlUser = `${URL}/api/v1/users/${tgId}?referred_by=${referral}`;
+            urlUser = `${Url}/api/v1/users/${tgId}?referred_by=${referral}`;
         } else {
-            urlUser = `${URL}/api/v1/users/${tgId}/`;
+            urlUser = `${Url}/api/v1/users/${tgId}/`;
         }
         axios.get(urlUser, {
             headers: {
@@ -132,7 +140,9 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
                     avatar: user.avatar,
                     energy: energy.toString(), //energy
                     points: user.points,
-                    name: `${firstName} ${secondName}`
+                    name: `${firstName} ${secondName}`,
+                    referralStorage: user.referral_storage,
+                    maxStorage: Number(user.max_storage)
                 };
                 dispatch(meRequestSuccess(userData));
             }).catch((err) => {
@@ -152,8 +162,8 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
             }
         })
     }
-    /*if (tgId && URL && !meData.username) {
-        axios.get(`${URL}/api/v1/users/get-token/123456`, {
+    /*if (tgId && Url && !meData.username) {
+        axios.get(`${Url}/api/internal/users/get-token/123456`, {
             headers: {
                 "Content-type": "application/json"
             }
@@ -165,9 +175,9 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
                 dispatch(meRequest());
                 let urlUser = '';
                 if (referral.length != 0) {
-                    urlUser = `${URL}/api/v1/users/${tgId}?referred_by=${referral}`;
+                    urlUser = `${Url}/api/v1/users/${tgId}?referred_by=${referral}`;
                 } else {
-                    urlUser = `${URL}/api/v1/users/${tgId}/`;
+                    urlUser = `${Url}/api/v1/users/${tgId}/`;
                 }
                 axios.get(urlUser, {
                     headers: {
@@ -178,7 +188,6 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
                 ).then((resp) => {
                     const user = resp.data;
                     let avatar = user.avatar;
-                    avatar = null;
                     if (!avatar) {
                         avatar = '';
                     }
@@ -221,7 +230,9 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
                             avatar: avatar,
                             energy: energy.toString(), //user.energy
                             points: user.points,
-                            name: `${firstName} ${secondName}`
+                            name: `${firstName} ${secondName}`,
+                            referralStorage: '200', //user.referral_storage
+                            maxStorage: Number(user.max_storage)
                         };
                         dispatch(meRequestSuccess(userData));
                     }).catch((err) => {
@@ -249,11 +260,48 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
 }
 
 
-export const updateCoinsRequestAsync = (coins: number, energy: number): ThunkAction<void, RootState, unknown, Action<string>> => (dispatch, getState) => {
+export const updateEnergyRequestAsync = (energy: number): ThunkAction<void, RootState, unknown, Action<string>> => (dispatch, getState) => {
     const meData = getState().me.data;
 
     let newData = meData;
-    newData.points = coins.toString();
     newData.energy = energy.toString();
+    dispatch(meRequestSuccess(newData));
+}
+
+export const updatePointsRequestAsync = (): ThunkAction<void, RootState, unknown, Action<string>> => (dispatch, getState) => {
+    const meData = getState().me.data;
+    const tgId = getState().userTg.id;
+    const URL = getState().url;
+    const token = getState().token;
+
+    if(token) {
+        dispatch(meRequest());
+        axios.get(`${URL}/api/v1/users/${tgId}/`, {
+            headers: {
+                "Content-type": "application/json",
+                "Authorization": `TelegramToken ${token}`
+            }
+        },
+        ).then(resp => {
+            const user = resp.data;
+            const points = user.points;
+            const newData = meData;
+            newData.points = points;
+            dispatch(meRequestSuccess(newData));
+        }).catch((err) => {
+            console.log(err);
+            dispatch(meRequestError(String(err)));
+        })
+    }
+}
+
+
+export const emptyReferralStorage = (): ThunkAction<void, RootState, unknown, Action<string>> => (dispatch, getState) => {
+    const meData = getState().me.data;
+
+    let newData = meData;
+    const referralPoints = Number(newData.referralStorage);
+    newData.referralStorage = '0';
+    newData.points = (Number(newData.points) + referralPoints).toString();
     dispatch(meRequestSuccess(newData));
 }

@@ -83,6 +83,7 @@
     --grey9A: #9A9A9A;
     --grey93: #939393;
     --grey1F: #1F1F1F;
+    --grey27: #272727;
 }
 
 body {
@@ -98,6 +99,7 @@ body {
 
 html {
     scroll-behavior: smooth;
+    overflow-x: hidden;
 }
 
 p, h1, h2, h3 {

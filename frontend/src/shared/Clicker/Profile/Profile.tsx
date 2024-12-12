@@ -4,25 +4,30 @@ import { ETextStyles } from '../../texts';
 import { formatNumber } from '../../../utils/formatNumber';
 import { PersonIcon } from '../../Elements/PersonIcon';
 import { EIcons, Icon } from '../../Icons';
+import { useAppSelector } from '../../hooks/useAppSelector';
+import { Spinner } from '../../Elements/Spinner';
 
 interface IProfileClicker {
   name: string,
-  points: number,
   img: string,
   className ?: string
 }
 
-export function Profile({ name, points, img, className }: IProfileClicker) {
+export function Profile({ name, img, className }: IProfileClicker) {
+  const points = useAppSelector<string | undefined>(state => state.me.data.points);
+  const loading = useAppSelector<boolean>(state => state.me.loading);
+
   return (
     <div className={`${styles.container} ${className}`}>
-      {img ? <PersonIcon img={`${img}`} size={30}/> : <div className={styles.emptyIcon}><Icon icon={EIcons.ProfileIcon}/></div> }
+      {img ? <PersonIcon img={`${img}`} size={30} /> : <Icon icon={EIcons.ProfileIcon} /> }
       <div className={styles.content}>
         <p style={ETextStyles.RwSb12120} className={styles.name}>{name}</p>
         <div className={styles.pointsContainer}>
-          <p className={styles.points} style={ETextStyles.InSb10120}>
-            {formatNumber(Number(points.toFixed(2)))}
-          </p>
-          <div className={styles.icon} style={{ backgroundImage: "url('assets/btnIcon.png')"}}></div>
+          {points && <p className={styles.points} style={ETextStyles.InSb10120}>
+            {formatNumber(Number(Number(points).toFixed(2)))}
+          </p>}
+          {!loading && <div className={styles.icon} style={{ backgroundImage: "url('assets/btnIcon.png')"}}></div>}
+          {loading && <Spinner size='14px' color='#FFFFFF' thickness='2px' />}
         </div>
       </div>
     </div>

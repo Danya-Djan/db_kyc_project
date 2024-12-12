@@ -5,10 +5,11 @@ import { ClickerPopup } from '../ClickerPopup';
 import { getGradient } from '../../../utils/getGradient';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { useDispatch } from 'react-redux';
-import { updateCoinsRequestAsync } from '../../../store/me/actions';
+import { updateEnergyRequestAsync } from '../../../store/me/actions';
 import axios from 'axios';
 import { DevPopup } from '../../Elements/DevPopup';
 import { saveMult } from '../../../store/mult';
+import { Spinner } from '../../Elements/Spinner';
 
 interface IClickerBtn {
   coins: number,
@@ -17,7 +18,7 @@ interface IClickerBtn {
   setMult(a: number): void
 }
 
-export function ClickerBtn({ coins, setCoins, energy, setMult }: IClickerBtn) {
+export function ClickerBtn({ setCoins, energy, setMult, coins }: IClickerBtn) {
   const urlClick = useAppSelector<string>(state => state.urlClick);
   const token = useAppSelector<string>(state => state.token);
   const [fill, setFill] = useState(0);
@@ -35,6 +36,7 @@ export function ClickerBtn({ coins, setCoins, energy, setMult }: IClickerBtn) {
   const [error, setError] = useState(false);
   const [animClose, setAnimClose] = useState(false);
   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const savedEnergy = sessionStorage.getItem('eg');
@@ -44,6 +46,12 @@ export function ClickerBtn({ coins, setCoins, energy, setMult }: IClickerBtn) {
     }
     setFill((maxEnergy - initEnergy) / maxEnergy * 100);
   }, []);
+
+  useEffect(() => {
+    if (initEnergy === 0 || fill === 100) {
+      setCloseError(true);
+    }
+  }, [initEnergy, fill]);
 
   useEffect(() => {
     setGradient(getGradient())
@@ -58,7 +66,8 @@ export function ClickerBtn({ coins, setCoins, energy, setMult }: IClickerBtn) {
   };
 
   const sendClick = () => {
-    if(token) {
+    if (token && !loading) {
+      setLoading(true);
       axios.post(`${urlClick}/api/v1/click/`,
         {}, 
         {
@@ -69,6 +78,7 @@ export function ClickerBtn({ coins, setCoins, energy, setMult }: IClickerBtn) {
       ).then((resp) => {
         //console.log(resp);
         if(resp.data) {
+          setLoading(false);
           const click = Number(resp.data.click.value);
           //
           const encodeMult = btoa(click.toString());
@@ -80,7 +90,7 @@ export function ClickerBtn({ coins, setCoins, energy, setMult }: IClickerBtn) {
           const newFill = (maxEnergy - newEnergy) / maxEnergy * 100;
           if (newFill <= 100) {
             const newCoins = Number(coins + click);
-            dispatch<any>(updateCoinsRequestAsync(newCoins, newEnergy))
+            dispatch<any>(updateEnergyRequestAsync(newEnergy))
             setCoins(newCoins);
             setEnergy(newEnergy)
             setFill(newFill);
@@ -104,6 +114,7 @@ export function ClickerBtn({ coins, setCoins, energy, setMult }: IClickerBtn) {
           setError(false)
         }
       }).catch((err) => {
+        setLoading(false);
         setCloseError(false);
         setError(true);
         console.log(err);
@@ -120,7 +131,7 @@ export function ClickerBtn({ coins, setCoins, energy, setMult }: IClickerBtn) {
     },
     {
       title: 'Как продолжить кликать',
-      text: <span>Чтобы охладиться, нужно нужно закрыть приложение, нажав по&nbsp;кнопке ниже.</span>,
+      text: <span>Чтобы охладиться, нужно закрыть приложение, нажав по&nbsp;кнопке ниже.</span>,
       img: 'assets/Monocle.png'
     },
     {
@@ -133,7 +144,8 @@ export function ClickerBtn({ coins, setCoins, energy, setMult }: IClickerBtn) {
   return (
     <div className={styles.ringContainer}>
       <div className={`${styles.ringBig} ${fill === 100 && styles.borderNone}`}></div>
-      <div className={`${styles.ringSmall} ${fill === 100 && styles.borderNone}`} style={{ backgroundImage: `url(${img})`, backgroundSize: `${size}px` }} onClick={btnClick}></div>
+      {!loading && <div className={`${styles.ringSmall} ${fill === 100 && styles.borderNone}`} style={{ backgroundImage: `url(${img})`, backgroundSize: `${size}px` }} onClick={btnClick}></div>}
+      {loading && <div className={styles.loadingContainer}> <Spinner size='50px' thickness='10px' color='var(--primary)'/>  </div> }
       <svg className={styles.svg} width="270" height="270" viewBox="0 0 270 270" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="135" cy="135" r="125" stroke={fill < 100 ? "url(#paint0_linear_619_10702)" : '#FF0000'} strokeWidth="20" strokeLinecap="round" style={{ strokeDasharray: `${dashArray} ${circumference}` }} />
         <defs>
@@ -144,7 +156,7 @@ export function ClickerBtn({ coins, setCoins, energy, setMult }: IClickerBtn) {
         <ClickerPopup title='Кнопка перегрелась' cards={hotCards} setClose={setClose} isBtn={true}/>
       } />}
       {!closeError && <ModalWindow removeBtn={true} setCloseAnimOut={setAnimClose} closeAnimOut={animClose} setClose={setCloseError} modalBlock={
-        <DevPopup setClose={setAnimClose} type='error'/>
+        <DevPopup setClose={setAnimClose} title='Возникла ошибка' text='Мы пока не можем принимать клики, но скоро всё починим.'/>
       } />}
     </div>
   );

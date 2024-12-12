@@ -13,6 +13,7 @@ import { Spinner } from '../../Elements/Spinner';
 import { updateBackground } from '../../../utils/updateBackground';
 import { ErrorPage } from '../ErrorPage';
 import { useNavigate } from 'react-router-dom';
+import { DevPage } from '../DevPage';
 
 interface IRoutePage {
   page: string
@@ -44,11 +45,12 @@ export function RoutePage({ page }: IRoutePage) {
     <div>
       {!verified ? <WrongSourcePage /> : <div>
         { //@ts-ignore
-        page === 'main' && !loadingUser && !errorUser && dataUser.name && <ClickerPage name={dataUser.name} points={Number(dataUser.points)} img={dataUser.avatar} energy={Number(dataUser.energy)}/>}
-        {page === 'rating' && !loadingUser && !errorUser && <RatingPage />}
-        {page === 'referral' && !loadingUser && !errorUser && <StoragePage />}
-        {page === 'auction' && !loadingUser && !errorUser && <AuctionPage />}
-        {page === 'styles' && !loadingUser && !errorUser && <StylesPage />}
+        page === 'main' && (!loadingUser || dataUser.username) && !errorUser && dataUser.name && <ClickerPage name={dataUser.name} points={Number(dataUser.points)} img={dataUser.avatar} energy={Number(dataUser.energy)}/>}
+        {page === 'rating' && (!loadingUser || dataUser.username) && !errorUser && <RatingPage />}
+        {page === 'referral' && (!loadingUser || dataUser.username) && !errorUser && <StoragePage />}
+        {page === 'auction' && (!loadingUser || dataUser.username) && !errorUser && <AuctionPage />}
+        {page === 'styles' && (!loadingUser || dataUser.username) && !errorUser && <StylesPage />}
+        {page === 'dev' && <DevPage/>}
         {(loadingUser) && <div className={styles.spinnerContainer}><Spinner color='#FFFFFF' size='50px' thickness='6px' className={styles.spinner} /></div> }
         {errorUser && !loadingUser && <ErrorPage detail={errorUser}/>}
       </div>} 

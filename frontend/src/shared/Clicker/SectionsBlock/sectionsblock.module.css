@@ -48,12 +48,20 @@
     color: var(--grey6C);
 }
 
+.textFull {
+    color: var(--white);
+}
+
 .scale {
     position: absolute;
     top: 0;
     left: 0;
     height: 10px;
     background: var(--primary);
+}
+
+.scaleFull {
+    background: var(--purple);
 }
 
 .dev {

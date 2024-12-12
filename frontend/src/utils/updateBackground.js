@@ -7,9 +7,7 @@ export const updateBackground = (page) => {
           back.style.background = 'linear-gradient(180deg, #0D0D0D 0%, #222 100%) fixed';
         } else if (page === 'auction') {
           back.style.background = '#0D0D0D';
-        } else if (page === 'referral') {
-          back.style.background = 'linear-gradient(167deg, #000 8.46%, #474747 96.84%) fixed';
-        } else if (page === 'rating') {
+        } else {
           back.style.background = 'linear-gradient(167deg, #000 8.46%, #474747 96.84%) fixed'
         }
       } else if (selectedStyle === 1) {

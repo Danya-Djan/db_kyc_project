@@ -7,7 +7,6 @@ import { SectionsBlock } from '../../Clicker/SectionsBlock';
 import { ClickerFooter } from '../../Clicker/ClickerFooter';
 import { StyleElements } from '../../Clicker/StyleElements';
 import { PointsZoom } from '../../Clicker/PointsZoom';
-import { Timer } from '../../Auction/Timer';
 import { useWindowSize } from 'usehooks-ts';
 import { useAppSelector } from '../../hooks/useAppSelector';
 
@@ -20,7 +19,7 @@ interface IClickerPageInterface {
 
 export function ClickerPage({ name, points, img, energy }: IClickerPageInterface) {
   const styleIndex = Number(localStorage.getItem('selectedStyle'));
-  const [coins, setCoins] = useState(points);
+  const [coins, setCoins] = useState(0);
   const [mult, setMult] = useState(1);
   const [closePoints, setClosePoints] = useState(true);
   const [closePointsAnim, setClosePointsAnim] = useState(false);
@@ -35,7 +34,7 @@ export function ClickerPage({ name, points, img, energy }: IClickerPageInterface
     //@ts-ignore
     let timer;
 
-    if (points !== coins) {
+    if (points !== coins && coins != 0) {
       setClosePoints(false);
       timer = setTimeout(() => {
         setClosePointsAnim(true);
@@ -50,8 +49,8 @@ export function ClickerPage({ name, points, img, energy }: IClickerPageInterface
   return (
     <div className={styles.container}>
       <div className={styles.records}>
-        {!closePoints && <PointsZoom points={coins} setClosePointsAnim={setClosePointsAnim} setClose={setClosePoints} className={styles.pointsAnim} closePointsAnim={closePointsAnim}/>}
-        <Profile name={name} points={coins} className={styles.profile} img={img}/>
+        {!closePoints && <PointsZoom setCoins={setCoins} points={coins} setClosePointsAnim={setClosePointsAnim} setClose={setClosePoints} className={styles.pointsAnim} closePointsAnim={closePointsAnim}/>}
+        <Profile name={name} className={styles.profile} img={img}/>
         <h1 style={ETextStyles.RwSb24100} className={styles.title}>Мои рекорды</h1>
         <SectionsBlock mult={mult}/>
       </div>

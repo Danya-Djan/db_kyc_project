@@ -68,7 +68,7 @@ export const StylesSwiper: React.FC<IStylesSwiper> = memo(({ selectedStyle, setC
             return (
               <div
                 ref={(el) => (slideRefs.current[index] = el as HTMLDivElement)}
-                className={`${styles.card} ${cardStyle} ${selectedStyle === index && styles.selected} ${index > 0 && styles.disabled}`}
+                className={`${styles.card} ${cardStyle} ${selectedStyle === index && styles.selected}`}
                 style={{
                   transform: `rotate(${isActive ? 0 : deg}deg)`,
                   filter: `blur(${isActive ? 0 : 3}px)`

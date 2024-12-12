@@ -15,7 +15,7 @@ export type RootState = {
   styleIndex: number,
   me: MeState,
   referral: string,
-  mult: number
+  mult: number,
 };
 
 //'http://127.0.0.1:8000'
@@ -35,10 +35,12 @@ const initialState: RootState = {
   me: {
     loading: false,
     error: '',
-    data: {}
+    data: {
+      maxStorage: 0
+    }
   },
   referral: '',
-  mult: 1
+  mult: 1,
 };
 
 export const RESET_STATE = 'RESET_STATE';

@@ -11,10 +11,8 @@ export function StylesPage() {
   const [selectedStyle, setSelectedStyle] = useState(selectedIndex ? selectedIndex : 0);
   const [currentSlide, setCurrentSlide] = useState(0);
   const [showNotif, setShow] = useState(false);
-  const isDev = true;
 
-  //const stylesNames = ['Черно-синий', 'Grapefruit', 'Tropic mamba', 'Mamba & Grapefruit'];
-  const stylesNames = ['Черно-синий', 'Скоро будет доступен', 'Скоро будет доступен', 'Скоро будет доступен'];
+  const stylesNames = ['Черно-синий', 'Grapefruit', 'Tropic mamba', 'Mamba & Grapefruit'];
   const colors = ['#7EB4DB', '#FE744B', '#F2D06B', '#EA9C55'];
   const gradients = ['linear-gradient(90deg, #90D7ED 13.05%, #6887C4 91.06%, #8085C0 172.24%)', 'linear-gradient(302deg, #FF5421 -59.57%, #FF7248 43.7%, #FF9576 163.26%)', 'linear-gradient(302deg, #6ACB54 -59.57%, #DCBB5A 43.7%, #E2883D 163.26%)', 'linear-gradient(302deg, #FF805A -1.15%, #DEAE53 83.89%)'];
 
@@ -57,7 +55,7 @@ export function StylesPage() {
         <span>Будь круче&nbsp;&mdash;</span> будь на&nbsp;стиле!</h1>
       <StylesSwiper selectedStyle={selectedStyle} setCurrentSlide={setCurrentSlide}/>
       <p style={ETextStyles.RwSb16120} className={styles.styleName}>{stylesNames[currentSlide]}</p>
-      {!isDev && <Button onClick={selectStyle} disabled={currentSlide === selectedStyle} text={currentSlide === selectedStyle ? 'Уже выбран' : 'Выбрать этот стиль'} className={styles.btn}/>}
+      <Button onClick={selectStyle} disabled={currentSlide === selectedStyle} text={currentSlide === selectedStyle ? 'Уже выбран' : 'Выбрать этот стиль'} className={styles.btn}/>
       {showNotif && <Notification title={`Стиль ${stylesNames[selectedStyle]} выбран`} text='Можете вернуться на&nbsp;главную, чтобы увидеть изменения' setShow={setShow} />}
     </div>
   );

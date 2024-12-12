@@ -24,6 +24,10 @@
     box-shadow: 0px 0px 30px 15px rgba(128, 135, 192, 0.25);
 }
 
+.ios {
+    top: 40px !important;
+}
+
 .icon {
     width: 40px;
     height: 40px;
