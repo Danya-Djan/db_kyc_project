@@ -1,0 +1,1 @@
+docker exec -it $1 python /batcher/app/migrate.py $2

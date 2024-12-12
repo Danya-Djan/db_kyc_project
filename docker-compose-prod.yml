@@ -1,0 +1,143 @@
+version: '3.9'
+
+volumes:
+  db_data: {}
+  batcher_db_data: {}
+  redis_data: {}
+
+services:
+  backend:
+    build:
+      context: ./backend
+    volumes:
+      - ./backend:/app
+    command: /gunicorn.sh
+    entrypoint: /entrypoint.sh
+    restart: on-failure
+    depends_on:
+      - postgres
+      - rabbitmq
+    env_file:
+      - .env/prod/pg
+      - .env/prod/back
+      - .env/prod/rmq
+      - .env/prod/bot
+
+  bot:
+    build:
+      context: ./clicker_bot
+    depends_on:
+      - backend
+    volumes:
+      - ./clicker_bot:/app
+    environment:
+      PROD: 1
+    env_file:
+      - .env/prod/bot
+    command:
+      - /gunicorn.sh
+    restart: on-failure
+#
+#  memcached:
+#    container_name: memcached
+#    image: memcached:latest
+
+  postgres:
+    image: postgres:14.5-alpine
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    env_file:
+      - .env/prod/pg
+
+  nginx:
+    build:
+      context: .
+      dockerfile: nginx/Dockerfile
+    ports:
+      - '80:80'
+      - '443:443'
+    depends_on:
+      - backend
+      - bot
+      - rabbitmq
+      - batcher
+    volumes:
+      - ./backend/static/:/static/
+      - ./nginx/certbot/conf:/etc/letsencrypt
+      - ./nginx/certbot/www:/var/www/certbot
+    restart: unless-stopped
+    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
+
+  certbot:
+    container_name: certbot
+    image: certbot/certbot
+    volumes:
+      - ./nginx/certbot/conf:/etc/letsencrypt
+      - ./nginx/certbot/www:/var/www/certbot
+    restart: unless-stopped
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+  celery:
+    build: ./backend
+    command: /start_celery.sh
+    volumes:
+      - ./backend:/app
+    env_file:
+      - .env/prod/back
+      - .env/prod/rmq
+      - .env/prod/pg
+      - .env/prod/bot
+    depends_on:
+      - backend
+      - rabbitmq
+
+  celery-beat:
+    build: ./backend
+    command: celery -A clicker beat -l info
+    volumes:
+      - ./backend:/app
+    env_file:
+      - .env/prod/back
+      - .env/prod/rmq
+      - .env/prod/pg
+      - .env/prod/bot
+    depends_on:
+      - backend
+      - rabbitmq
+
+  rabbitmq:
+    container_name: 'rabbitmq'
+    image: 'rabbitmq:3-management-alpine'
+    env_file:
+      - .env/prod/rmq
+    ports:
+      - '15672:15672'
+
+  redis:
+    env_file:
+      - .env/prod/redis
+    image: redis
+    command: bash -c "redis-server --appendonly yes --requirepass $${REDIS_PASSWORD}"
+    volumes:
+      - redis_data:/data
+
+  batcher:
+    build:
+      context: ./batcher
+    depends_on:
+      - redis
+      - batcher-postgres
+      - rabbitmq
+    env_file:
+      - .env/prod/rmq
+      - .env/prod/redis
+      - .env/prod/batcher-pg
+      - .env/prod/batcher
+      - .env/prod/bot
+
+  batcher-postgres:
+    image: postgres:14.5-alpine
+    volumes:
+      - batcher_db_data:/var/lib/postgresql/data
+    env_file:
+      - .env/prod/batcher-pg
