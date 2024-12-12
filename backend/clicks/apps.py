@@ -1,0 +1,9 @@
+from django.apps import AppConfig
+
+
+class ClicksConfig(AppConfig):
+    default_auto_field = "django.db.models.BigAutoField"
+    name = "clicks"
+
+    def ready(self):
+        from .celery import handle_click
