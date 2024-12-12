@@ -7,13 +7,14 @@ interface IDevPopup {
   setClose(a: boolean): void
   title: string,
   text: string,
+  img?: string,
 }
 
-export function DevPopup({ setClose, title, text }: IDevPopup) {
+export function DevPopup({ setClose, title, text, img }: IDevPopup) {
   return (
     <div className={styles.container}>
       <div className={styles.iconContainer}>
-        <div className={styles.icon} style={{backgroundImage: "url('assets/programming.gif')"}}></div>
+        <div className={styles.icon} style={{ backgroundImage: `url(${img ? img : 'assets/programming.gif'})`}}></div>
       </div>
       <h2 className={styles.title} style={ETextStyles.RwSb24100}>{title}</h2>
       <p className={styles.text} style={ETextStyles.RwSb14120}>{text}</p>

@@ -21,3 +21,11 @@
     flex-direction: column;
     gap: 8px;
 }
+
+.spinnerContainer {
+    display: flex;
+    width: 100vw;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+}

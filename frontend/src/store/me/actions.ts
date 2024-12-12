@@ -3,6 +3,7 @@ import { ThunkAction } from "redux-thunk";
 import { RootState } from "../reducer";
 import axios from "axios";
 import { saveMult } from "../mult";
+import { saveToken } from "../token";
 
 export interface IUserData {
     tgId?: number;
@@ -13,6 +14,7 @@ export interface IUserData {
     energy?: string;
     referralStorage?: string;
     maxStorage: number;
+    rank ?: number
 }
 
 export const ME_REQUEST = 'ME_REQUEST';
@@ -66,8 +68,10 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
     }
 
     const firstClick = (token: string) => {
-        axios.post(`${URLClick}/api/v1/click/`,
-            {},
+        axios.post(`${URLClick}/api/v1/batch-click/`,
+            {
+                count: 1
+            },
             {
                 headers: {
                     "Authorization": `TelegramToken ${token}`
@@ -78,6 +82,9 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
             dispatch<any>(saveMult(click));
             const clickCode = btoa(click.toString());
             sessionStorage.setItem('mt', clickCode);
+
+            const energy = Number(resp.data.energy);
+            dispatch<any>(updateEnergyRequestAsync(energy));
         });
     };
 
@@ -170,7 +177,7 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
         },
         ).then((resp) => {
             const token = resp.data.token;
-            getState().token = token;
+            dispatch<any>(saveToken(resp.data.token));
             if (token && !meData.username) {
                 dispatch(meRequest());
                 let urlUser = '';
@@ -303,5 +310,13 @@ export const emptyReferralStorage = (): ThunkAction<void, RootState, unknown, Ac
     const referralPoints = Number(newData.referralStorage);
     newData.referralStorage = '0';
     newData.points = (Number(newData.points) + referralPoints).toString();
+    dispatch(meRequestSuccess(newData));
+}
+
+export const updateRank = (rank: number): ThunkAction<void, RootState, unknown, Action<string>> => (dispatch, getState) => {
+    const meData = getState().me.data;
+
+    let newData = meData;
+    newData.rank = rank;
     dispatch(meRequestSuccess(newData));
 }

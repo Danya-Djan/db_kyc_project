@@ -4,7 +4,7 @@ import { formatNumber } from '../../../utils/formatNumber';
 import { ETextStyles } from '../../texts';
 import ReactDOM from 'react-dom';
 import { useDispatch } from 'react-redux';
-import { meRequest, meRequestError, updateEnergyRequestAsync, updatePointsRequestAsync } from '../../../store/me/actions';
+import { IUserData, meRequest, meRequestSuccess, updateEnergyRequestAsync, updatePointsRequestAsync } from '../../../store/me/actions';
 import { checkIOS } from '../../../utils/checkMobile';
 import axios from 'axios';
 import { useAppSelector } from '../../hooks/useAppSelector';
@@ -12,56 +12,82 @@ import { saveMult } from '../../../store/mult';
 
 interface IPointsZoom {
   points: number,
-  setClose(a:boolean): void,
-  className ?: string,
+  setClose(a: boolean): void,
+  className?: string,
   closePointsAnim: boolean,
   setClosePointsAnim(a: boolean): void,
-  setCoins(a:number):void,
+  setCoins(a: number): void,
   setCloseError(a: boolean): void,
   setEnergy(a: number): void,
   setMult(a: number): void,
+  setClickTime(a: number): void,
+  clickTime: number,
+  setCloseAutoClick(a: boolean): void,
+  sameCoords: boolean,
+  setSameCoords(a: boolean): void,
 }
 
-export function PointsZoom({ points, setMult, setClose, setCoins, className, closePointsAnim, setClosePointsAnim, setCloseError, setEnergy }: IPointsZoom) {
+export function PointsZoom({ points, sameCoords, setSameCoords, setCloseAutoClick, setMult, setClose, setCoins, className, closePointsAnim, setClosePointsAnim, setCloseError, setEnergy, clickTime, setClickTime }: IPointsZoom) {
   const [open, setOpen] = useState(true);
   const node = document.querySelector('#modal_root');
   const urlClick = useAppSelector<string>(state => state.urlClick);
   const token = useAppSelector<string>(state => state.token);
   const [sizeHand, setSizeHand] = useState(30);
-  const energy = Number(useAppSelector<string | undefined>(state=>state.me.data.energy));
+  const energy = Number(useAppSelector<string | undefined>(state => state.me.data.energy));
+  const userData = useAppSelector<IUserData>(state => state.me.data);
   if (!node) return null;
   const dispatch = useDispatch();
 
   const sendClicks = () => {
     const initPoints = points;
-    dispatch(meRequest());
-    axios.post(`${urlClick}/api/v1/batch-click/`,
-      {
-        count: initPoints
-      },
-      {
-        headers: {
-          "Authorization": `TelegramToken ${token}`
-        }
-      }
-    ).then(resp => {
-      const data = resp.data;
-      const click = Number(data.click.value);
-      const encodeMult = btoa(click.toString());
-      sessionStorage.setItem('mt', encodeMult);
-      setMult(Number(click.toFixed(2)));
-      const energy = Number(data.energy);
-      dispatch<any>(saveMult(Number(click.toFixed(2))));
-      dispatch<any>(updateEnergyRequestAsync(energy));
-      dispatch<any>(updatePointsRequestAsync());
-    }).catch(err => {
-      console.log(err);
-      setCloseError(false);
+    const clickTimeInit = clickTime;
+    let initSameCoords = sameCoords;
+    let avtTime = 500;
+    if (points > 1) {
+      avtTime = clickTimeInit / (initPoints - 1);
+    }
+
+    //block function
+    initSameCoords = false;
+
+    setClickTime(0);
+    setSameCoords(false);
+
+    if (avtTime < 100 && initSameCoords && points > 30) {
+      setCloseAutoClick(false);
       const returnEnergy = energy + initPoints;
       setEnergy(returnEnergy);
       dispatch<any>(updateEnergyRequestAsync(returnEnergy));
-      dispatch(meRequestError(String(err)));
-    })
+    } else {
+      dispatch(meRequest());
+      axios.post(`${urlClick}/api/v1/batch-click/`,
+        {
+          count: initPoints
+        },
+        {
+          headers: {
+            "Authorization": `TelegramToken ${token}`
+          }
+        }
+      ).then(resp => {
+        const data = resp.data;
+        const click = Number(data.click.value);
+        const encodeMult = btoa(click.toString());
+        sessionStorage.setItem('mt', encodeMult);
+        setMult(Number(click.toFixed(2)));
+        const energy = Number(data.energy);
+        dispatch<any>(saveMult(Number(click.toFixed(2))));
+        dispatch<any>(updateEnergyRequestAsync(energy));
+        dispatch<any>(updatePointsRequestAsync());
+      }).catch(err => {
+        console.log(err);
+        setCloseError(false);
+        const returnEnergy = energy + initPoints;
+        setEnergy(returnEnergy);
+        dispatch<any>(updateEnergyRequestAsync(returnEnergy));
+        dispatch(meRequestSuccess(userData));
+      })
+    }
   };
 
   useEffect(() => {
@@ -89,7 +115,7 @@ export function PointsZoom({ points, setMult, setClose, setCoins, className, clo
       setSizeHand(30);
     }, 100);
 
-    return () => clearTimeout(timer); 
+    return () => clearTimeout(timer);
   }, [points]);
 
   return (

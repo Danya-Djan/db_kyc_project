@@ -25,3 +25,11 @@
 .marginTop {
     margin-top: 60px;
 }
+
+.spinnerContainer {
+    margin: 60px 0;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+}

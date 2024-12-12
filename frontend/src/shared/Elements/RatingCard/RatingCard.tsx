@@ -3,28 +3,36 @@ import styles from './ratingcard.module.css';
 import { EIcons, Icon } from '../../Icons';
 import { PointsBlock } from '../PointsBlock';
 import { ETextStyles } from '../../texts';
+import { PersonIcon } from '../PersonIcon';
 
 interface IRatingCard {
   number: number,
   name: string,
-  score: string
+  score: string,
+  index: number,
+  friend ?: boolean,
+  img: string
 }
 
-export function RatingCard({number, name, score}: IRatingCard) {
+export function RatingCard({number, name, score, index, friend=false, img}: IRatingCard) {
+  let order = number;
+  if(friend) {
+    order = index;
+  }
   return (
-    <div className={`${styles.container} ${number < 4 && styles.win} ${name==='Ты' && styles.you}`}>
+    <div className={`${styles.container} ${(order < 4) && styles.win} ${name==='Ты' && styles.you}`}>
       <div className={styles.left}>
-        {(number === 1) && <div className={styles.medal}>
+        {order === 1 && <div className={styles.medal}>
           <Icon icon={EIcons.MedalFirst}/>
         </div>}
-        {(number === 2) && <div className={styles.medal}>
+        {order === 2 && <div className={styles.medal}>
           <Icon icon={EIcons.MedalSecond} />
         </div>}
-        {(number === 3) && <div className={styles.medal}>
+        {order === 3 && <div className={styles.medal}>
           <Icon icon={EIcons.MedalThird} />
         </div>}
-        {(number > 3) && <div className={styles.number} style={ETextStyles.InSb14120}>{number}</div>}
-        <div className={styles.img}></div>
+        {(order > 3 ) && <div className={styles.number} style={ETextStyles.InSb14120}>{order}</div>}
+        <PersonIcon size={20} img={img} className={styles.img}/>
         <p style={ETextStyles.RwSb14120} className={styles.name}>{name}</p>
       </div>
       <PointsBlock points={score}/>

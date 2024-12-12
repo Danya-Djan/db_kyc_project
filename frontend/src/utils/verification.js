@@ -53,3 +53,17 @@ export const verificationTg = () => {
 
     return [user, token];
 }
+
+export const getTgUserId = () => {
+  let id = '';
+
+  if(window.Telegram) {
+    const tg = window.Telegram.WebApp;
+    id = tg.initDataUnsafe?.user?.id;
+  }
+
+  //локально
+  //id = "123456";
+
+  return id;
+}

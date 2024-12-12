@@ -5,6 +5,10 @@ import { MeState, meReducer } from './me/reducer';
 import { ME_REQUEST, ME_REQUEST_ERROR, ME_REQUEST_SUCCESS } from './me/actions';
 import { SET_REFERRAL } from './referral';
 import { SET_MULT } from './mult';
+import { RankState, friendsReducer } from './friends/reducer';
+import { FRIENDS_REQUEST, FRIENDS_REQUEST_ERROR, FRIENDS_REQUEST_SUCCESS } from './friends/actions';
+import { RANK_REQUEST, RANK_REQUEST_ERROR, RANK_REQUEST_SUCCESS } from './rank/actions';
+import { rankReducer } from './rank/reducer';
 
 export type RootState = {
   url: string,
@@ -16,6 +20,8 @@ export type RootState = {
   me: MeState,
   referral: string,
   mult: number,
+  friends: RankState,
+  rank: RankState,
 };
 
 //'http://127.0.0.1:8000'
@@ -38,6 +44,16 @@ const initialState: RootState = {
     data: {
       maxStorage: 0
     }
+  },
+  friends: {
+    loading: false,
+    error: '',
+    data: []
+  },
+  rank: {
+    loading: false,
+    error: '',
+    data: []
   },
   referral: '',
   mult: 1,
@@ -78,6 +94,20 @@ export const rootReducer: Reducer<RootState> = (state = initialState, action) =>
             ...state,
             me: meReducer(state.me, action)
         };
+    case FRIENDS_REQUEST:
+    case FRIENDS_REQUEST_SUCCESS:
+    case FRIENDS_REQUEST_ERROR:
+      return {
+        ...state,
+        friends: friendsReducer(state.friends, action)
+      };
+    case RANK_REQUEST:
+    case RANK_REQUEST_SUCCESS:
+    case RANK_REQUEST_ERROR:
+      return {
+        ...state,
+        rank: rankReducer(state.rank, action)
+      };
     default:
       return state;
   }

@@ -14,6 +14,7 @@ import { updateBackground } from '../../../utils/updateBackground';
 import { ErrorPage } from '../ErrorPage';
 import { useNavigate } from 'react-router-dom';
 import { DevPage } from '../DevPage';
+import { useRankData } from '../../hooks/useRankData';
 
 interface IRoutePage {
   page: string
@@ -22,6 +23,7 @@ interface IRoutePage {
 export function RoutePage({ page }: IRoutePage) {
   const verified = useTgData();
   const { dataUser, loadingUser, errorUser } = useUserData();
+  useRankData();
   const navigate = useNavigate();
   //@ts-ignore
   const tg = window.Telegram.WebApp;
