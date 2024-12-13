@@ -35,7 +35,7 @@ export function Timer({initTime}: ITimer) {
   return (
     <div className={styles.container}>
       <div className={styles.block}>
-        <p className={styles.value} style={ETextStyles.InSb14120}>{hour}</p>
+        <p className={styles.value} style={ETextStyles.InSb14120}>{hour.toString().length === 1 ? `0${hour}` : hour}</p>
         <p className={styles.text} style={ETextStyles.RwRg12120}>{declension(hour, 'час', 'часа', 'часов')}</p>
       </div>
       <div className={styles.dot}></div>

@@ -42,9 +42,8 @@ export function ClickerPage({ name, points, img, energy }: IClickerPageInterface
     const html = document.querySelector('html');
 
     if(html) {
-      html.style.overflow = 'scroll';
+      html.style.overflowY = 'scroll';
     }
-
   }, []);
  
   useEffect(() => {

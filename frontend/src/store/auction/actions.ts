@@ -88,6 +88,7 @@ export const auctionRequestAsync = (): ThunkAction<void, RootState, unknown, Act
                     const loseAuctions = [];
 
                     for (let i = 0; i < data.length; i++) {
+                        const active = Boolean(data[i].is_active);
                         const nowDate = new Date();
                         const endDate = new Date(data[i].end_time);
                         const time = Math.ceil(Math.abs(endDate.getTime() - nowDate.getTime()) / 1000);
@@ -112,7 +113,9 @@ export const auctionRequestAsync = (): ThunkAction<void, RootState, unknown, Act
                                             bet: dataBet[k].value
                                         }
 
-                                        topAuctions.push(topItem);
+                                        if(active) {
+                                            topAuctions.push(topItem);
+                                        }
                                     }
                                 }
                             }
@@ -131,7 +134,9 @@ export const auctionRequestAsync = (): ThunkAction<void, RootState, unknown, Act
                                                 bet: userData[z].value
                                             }
 
-                                            loseAuctions.push(loseItem)
+                                            if(active) {
+                                                loseAuctions.push(loseItem)
+                                            }
                                         }
                                     }
                                 }
@@ -151,7 +156,9 @@ export const auctionRequestAsync = (): ThunkAction<void, RootState, unknown, Act
                             myBet: myBet.toString()
                         };
 
-                        auctionResults.push(item);
+                        if(active) {
+                            auctionResults.push(item);
+                        }
                     }
 
                     dispatch(updateMyAuctions(topAuctions, 'top'));

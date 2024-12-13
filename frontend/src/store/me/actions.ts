@@ -112,6 +112,8 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
         },
         ).then((resp) => {
             const user = resp.data;
+            sessionStorage.setItem('shT', 't');
+            sessionStorage.setItem('shL', 't');
             axios.get(`${URLClick}/api/v1/energy`, {
                 headers: {
                     //"Content-type": "application/json",
@@ -125,8 +127,6 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
                 const savedToken = sessionStorage.getItem('tk');
                 if (savedToken) {
                     if (savedToken != encodeToken) {
-                        sessionStorage.setItem('shT', 't');
-                        sessionStorage.setItem('shL', 't');
                         sessionStorage.setItem('tk', encodeToken);
                         firstClick(token);
                         const energyCode = btoa(energy.toString());
@@ -162,6 +162,7 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
                     maxStorage: Number(user.max_storage)
                 };
                 dispatch(meRequestSuccess(userData));
+                loadNewRank();
             }).catch((err) => {
                 console.log(err);
                 if (err.response.data.detail) {
@@ -203,6 +204,8 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
                     }
                 },
                 ).then((resp) => {
+                    sessionStorage.setItem('shT', 't');
+                    sessionStorage.setItem('shL', 't');
                     const user = resp.data;
                     let avatar = user.avatar;
                     if (!avatar) {
@@ -221,8 +224,6 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
                         const savedToken = sessionStorage.getItem('tk');
                         if (savedToken) {
                             if (savedToken != encodeToken) {
-                                sessionStorage.setItem('shT', 't');
-                                sessionStorage.setItem('shL', 't');
                                 sessionStorage.setItem('tk', encodeToken);
                                 firstClick(token);
                                 const energyCode = btoa(energy.toString());
@@ -254,6 +255,7 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
                             maxStorage: Number(user.max_storage)
                         };
                         dispatch(meRequestSuccess(userData));
+                        loadNewRank();
                     }).catch((err) => {
                         console.log(err);
                         if (err.response.data.detail) {
