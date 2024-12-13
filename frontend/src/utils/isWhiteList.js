@@ -2,6 +2,7 @@ import { getTgUserId } from "./verification";
 
 export const isWhiteList = () => {
   let isWhiteList = false;
+  //123456,
   const whiteList = [
     //TODO!
   ];

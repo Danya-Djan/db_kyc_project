@@ -67,7 +67,7 @@ export function AuctionPopup({ setClose, setCloseErrorBet, auctionId, img, name,
         dispatch<any>(updatePointsRequestAsync());
         dispatch<any>(updateAuction(auctionId));
         setBet(bet);
-        setLead(true);
+        //setLead(true);
         const timer = setInterval(() => {
           setCloseResultPopup(false);
           clearTimeout(timer);

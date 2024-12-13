@@ -52,6 +52,7 @@ export const friendsRequestAsync = (): ThunkAction<void, RootState, unknown, Act
     const userTg = getState().userTg.id;
 
     if(token) {
+        dispatch(friendsRequest());
         axios.get(`${URL}/api/v1/users/rank/friends`,
             {
                 headers: {

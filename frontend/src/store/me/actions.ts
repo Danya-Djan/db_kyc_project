@@ -6,6 +6,7 @@ import { saveMult } from "../mult";
 import { saveToken } from "../token";
 
 export interface IAuctionItem {
+    id: string,
     name: string,
     img: string,
     bet: string
@@ -23,6 +24,7 @@ export interface IUserData {
     rank ?: number,
     loseAuctions?: Array<IAuctionItem>,
     topAuctions?: Array<IAuctionItem>,
+    winAuctions?: Array<IAuctionItem>,
 }
 
 export const ME_REQUEST = 'ME_REQUEST';
@@ -369,6 +371,8 @@ export const updateMyAuctions = (data: Array<IAuctionItem>, type: string): Thunk
 
     if(type === 'top') {
         newData.topAuctions = data;
+    } else if(type === 'win') {
+        newData.winAuctions = data;
     } else {
         newData.loseAuctions = data;
     }

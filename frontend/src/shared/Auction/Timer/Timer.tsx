@@ -16,6 +16,7 @@ export function Timer({initTime}: ITimer) {
   const tick = () => {
     if (hour === 0 && min === 0 && sec === 0) {
       setOver(true);
+      window.location.reload();
     } else if (min === 0 && sec === 0) {
       setTime([hour - 1, 59, 59]);
     } else if (sec == 0) {

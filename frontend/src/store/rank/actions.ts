@@ -46,6 +46,7 @@ export const rankRequestAsync = (): ThunkAction<void, RootState, unknown, Action
     const result: Array<IUserRank> = [];
 
     if(token) {
+        dispatch(rankRequest());
         axios.get(`${URL}/api/v1/users/rank/top?limit=3`,
             {
                 headers: {

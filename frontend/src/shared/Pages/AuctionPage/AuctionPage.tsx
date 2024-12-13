@@ -29,7 +29,9 @@ export function AuctionPage() {
         {errorAuction ? <ErrorPage fullScreen={true} title='Возникла ошибка загрузки аукционов' text='Перезагрузите страницу или попробуйте позже' detail={errorAuction} /> :
         <div>
             <h1 className={styles.title} style={ETextStyles.RwSb26100}> <span>Соревнуйся за товары</span> на аукционе!</h1>
-            {auctionBlock}
+            {dataAuction.length != 0 ? auctionBlock
+              : <p style={ETextStyles.InRg14120}>Скоро тут появятся новые аукционы.</p>
+          }
         </div>
         }
       </div>

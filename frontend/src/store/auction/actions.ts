@@ -57,6 +57,7 @@ export const auctionRequestAsync = (): ThunkAction<void, RootState, unknown, Act
     const userTg = getState().userTg.id;
 
     if (token) {
+        dispatch(auctionRequest());
         axios.get(`${URL}/api/v1/auction/auction?is_active=true`,
             {
                 headers: {
@@ -88,9 +89,12 @@ export const auctionRequestAsync = (): ThunkAction<void, RootState, unknown, Act
                     const loseAuctions = [];
 
                     for (let i = 0; i < data.length; i++) {
-                        const active = Boolean(data[i].is_active);
+                        let active = true;
                         const nowDate = new Date();
                         const endDate = new Date(data[i].end_time);
+                        if (nowDate > endDate) {
+                            active = false;
+                        }
                         const time = Math.ceil(Math.abs(endDate.getTime() - nowDate.getTime()) / 1000);
                         let maxBet = Number(data[i].initial_cost);
                         let isLead = false;
@@ -108,12 +112,13 @@ export const auctionRequestAsync = (): ThunkAction<void, RootState, unknown, Act
                                         isLead = true;
 
                                         const topItem = {
+                                            id: data[i].id,
                                             name: data[i].product.name,
                                             img: data[i].product.cover,
                                             bet: dataBet[k].value
                                         }
 
-                                        if(active) {
+                                        if (active) {
                                             topAuctions.push(topItem);
                                         }
                                     }
@@ -127,14 +132,15 @@ export const auctionRequestAsync = (): ThunkAction<void, RootState, unknown, Act
                                     if (Number(userData[z].value) > myBet) {
                                         myBet = Number(userData[z].value);
 
-                                        if(!isLead) {
+                                        if (!isLead) {
                                             const loseItem = {
+                                                id: data[i].id,
                                                 name: data[i].product.name,
                                                 img: data[i].product.cover,
                                                 bet: userData[z].value
                                             }
 
-                                            if(active) {
+                                            if (active) {
                                                 loseAuctions.push(loseItem)
                                             }
                                         }
@@ -156,7 +162,7 @@ export const auctionRequestAsync = (): ThunkAction<void, RootState, unknown, Act
                             myBet: myBet.toString()
                         };
 
-                        if(active) {
+                        if (active) {
                             auctionResults.push(item);
                         }
                     }
@@ -250,3 +256,55 @@ export const updateAuction = (id: string): ThunkAction<void, RootState, unknown,
     })
 }
 
+
+export const loadWinAuction = (): ThunkAction<void, RootState, unknown, Action<string>> => (dispatch, getState) => {
+    const URL = getState().url;
+    const token = getState().token;
+    const userId = getState().userTg.id;
+
+    if (token) {
+        axios.get(`${URL}/api/v1/auction/auction?is_active=false`,
+            {
+                headers: {
+                    "Authorization": `TelegramToken ${token}`
+                }
+            }
+        ).then(resp => {
+            const dataOver = resp.data.results;
+
+            axios.get(`${URL}/api/v1/auction/bet?order_by=-value&is_winning=true`,
+                {
+                    headers: {
+                        "Authorization": `TelegramToken ${token}`
+                    }
+                }
+            ).then(resp2 => {
+                const dataBet = resp2.data.results;
+                const winAuctions = [];
+
+                if (dataBet.length != 0) {
+                    if (dataOver.length != 0) {
+                        for (let i = 0; i < dataOver.length; i++) {
+                            for (let k = 0; k < dataBet.length; k++) {
+                                if (dataOver[i].id === dataBet[k].auction) {
+                                    if (Number(userId) === Number(dataBet[k].user.tg_id)) {
+                                        const item = {
+                                            id: dataOver[i].id,
+                                            name: dataOver[i].product.name,
+                                            img: dataOver[i].product.cover,
+                                            bet: dataBet[k].value
+                                        }
+                                        winAuctions.push(item);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                dispatch(updateMyAuctions(winAuctions, 'win'));
+            })
+        })
+    }
+
+};

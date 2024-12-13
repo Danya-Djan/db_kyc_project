@@ -14,6 +14,51 @@ export function AuctionMainPopups() {
   const [closeAnim, setCloseAnim] = useState(false);
   const topAuctions = useAppSelector<Array<IAuctionItem> | undefined>(state=>state.me.data.topAuctions);
   const loseAuctions = useAppSelector<Array<IAuctionItem> | undefined>(state => state.me.data.loseAuctions);
+  const winAuctions = useAppSelector<Array<IAuctionItem> | undefined>(state => state.me.data.winAuctions);
+  const [winInfo, setWinInfo] = useState<IAuctionItem>();
+
+  useEffect(() => { 
+    let showWindow = false;
+    if (winAuctions && winAuctions.length != 0) {
+      for (let i = 0; i < winAuctions.length; i++) {
+        const winShow = localStorage.getItem('wS');
+        if (winShow) {
+          const winArray = JSON.parse(winShow);
+          if (winArray && winArray.length != 0) {
+            let isExist = false;
+            for (let k = 0; k < winArray.length; k++) {
+              if (Number(winArray[k]) === Number(winAuctions[i].id)) {
+                isExist = true;
+              }
+            }
+            if(!isExist) {
+              winArray.push(winAuctions[i].id);
+              localStorage.setItem('wS', JSON.stringify(winArray));
+              showWindow = true;
+              setWinInfo(winAuctions[i]);
+            }
+          } else {
+            const newArray = [];
+            newArray.push(winAuctions[i].id);
+            localStorage.setItem('wS', JSON.stringify(newArray));
+            showWindow = true;
+            setWinInfo(winAuctions[i]);
+          }
+        } else {
+          const newArray = [];
+          newArray.push(winAuctions[i].id);
+          localStorage.setItem('wS', JSON.stringify(newArray));
+          showWindow = true;
+          setWinInfo(winAuctions[i]);
+        }
+      }
+    }
+
+    if(showWindow) {
+      setCloseWin(false);
+    }
+
+  }, [winAuctions]);
 
   useEffect(() => {
     const show = sessionStorage.getItem('shT');
@@ -38,7 +83,7 @@ export function AuctionMainPopups() {
   return (
     <div>
       {!closeWin && <ModalWindow closeAnimOut={closeAnim} setCloseAnimOut={setCloseAnim} setClose={setCloseWin} removeBtn={true} modalBlock={
-        <AuctionWinPopup name='iPhone 15 Pro Max ' img='' setClose={setCloseAnim}/>
+        <AuctionWinPopup name={winInfo?.name ? winInfo?.name : ''} img={winInfo?.img ? winInfo?.img : ''} setClose={setCloseAnim}/>
       } />}
       {!closeTop && topAuctions != undefined && <ModalWindow closeAnimOut={closeAnim} setCloseAnimOut={setCloseAnim} setClose={setCloseTop} removeBtn={true} modalBlock={
         <AuctionTopPopup items={topAuctions} setClose={setCloseAnim}/>

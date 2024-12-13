@@ -49,24 +49,25 @@ export function PointsZoom({ points, sameInterval, setSameInterval, sameCoords, 
     let initSameInterval = sameInterval;
     let avtTime = 500;
     if (points > 1) {
-      avtTime = clickTimeInit / (initPoints - 1);
+      avtTime = clickTimeInit / initPoints;
     }
 
     setClickTime(0);
     setSameCoords(false);
-  
-    if ((avtTime < 100 && initSameCoords) || (initSameInterval) && initPoints > 20) {
 
-      /*axios.post(`${URL}/api/v1/users/warn/`, {}, {
+  
+    if ((avtTime < 100 && initPoints > 20) || (avtTime < 130 && initPoints > 300)) {
+
+      axios.post(`${URL}/api/v1/users/warn/`, {}, {
         headers: {
           "Authorization": `TelegramToken ${token}`
         }
       }).then(resp => {
-        console.log(resp);
+        //console.log(resp);
       }).catch(err => {
         //console.log(err)
-      })*/
-      sendAutoClickData(userData.tgId, points, avtTime);
+      })
+      //sendAutoClickData(userData.tgId, points, avtTime);
       setCloseAutoClick(false);
       setSameInterval(false);
       const returnEnergy = energy + initPoints;
