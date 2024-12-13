@@ -5,3 +5,4 @@ __pycache__/
 *.py[cod]
 celerybeat-schedule
 backend/static
+bot/logs.log
