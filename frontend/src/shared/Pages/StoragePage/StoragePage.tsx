@@ -14,7 +14,7 @@ import { useNavigate } from 'react-router-dom';
 export function StoragePage() {
   const userId = useAppSelector<string>(state => state.userTg.id);
   const [page, setPage] = useState('storage');
-  const refLink = `https://t.me/sapphirecrown_bot?start=user_${userId}`;
+  const refLink = `https://t.me/kyc_clicker_bot?start=user_${userId}`;
   const [showNotif, setShow] = useState(false);
   const navigate = useNavigate();
 

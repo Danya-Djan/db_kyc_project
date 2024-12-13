@@ -1,6 +1,6 @@
 import sys
 import asyncio
-from .src.db.pg import migrate
+from app.src.db.pg import migrate
 
 
 if __name__ == '__main__':

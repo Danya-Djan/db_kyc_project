@@ -25,7 +25,7 @@ async def get_token_header(authorization: str = Header()) -> (int, str):
         raise HTTPException(status_code=403, detail='Unauthorized')
     secret = hmac.new(
         'WebAppData'.encode(),
-        TG_TOKEN.encode('utf-8'),
+        str(TG_TOKEN).encode('utf-8'),
         digestmod=hashlib.sha256
     ).digest()
     actual_hash = hmac.new(
@@ -33,7 +33,7 @@ async def get_token_header(authorization: str = Header()) -> (int, str):
         msg=data_check_string.encode('utf-8'),
         digestmod=hashlib.sha256
     ).hexdigest()
-    if hash != actual_hash:
+    if _hash != actual_hash:
         raise HTTPException(status_code=403, detail='Unauthorized')
 
     data_dict = dict([x.split('=') for x in data_check_string.split('\n')])

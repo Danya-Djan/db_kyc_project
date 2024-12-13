@@ -25,7 +25,10 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-4nww@d-th@7^(chggt5q+$e*d_
 DEBUG = int(os.getenv('DEBUG', 0))
 PROD = 1 - DEBUG
 
-ALLOWED_HOSTS = ['crowngame.ru', 'backend', '127.0.0.1']
+ALLOWED_HOSTS = ['backend', '127.0.0.1']
+if app_url := os.getenv('APP_URL', None):
+    ALLOWED_HOSTS.append(app_url)
+
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
 USE_X_FORWARDED_PORT = True

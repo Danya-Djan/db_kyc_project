@@ -33,13 +33,13 @@ async def store(conn: Connection, click: Click) -> int:
         RETURNING id
         ;
     '''
-    return await conn.fetchval(query, click.UserID, click.DateTime, click.Value)
+    return await conn.fetchval(query, click.userId, click.dateTime, click.value)
 
 
 async def bulk_store_copy(conn: Connection, click: Click, count: int) -> None:
-    args = [(click.UserID, click.DateTime. click.Value) for _ in range(count)]
+    args = [(click.userId, click.dateTime, click.value) for _ in range(count)]
     query = '''
-        INSERT INTO clicks(user_id, time, values, expiry_info)
+        INSERT INTO clicks(user_id, time, value, expiry_info)
         VALUES($1, $2, $3, '{"period_24": false, "period_168": false}')
         ;
     '''

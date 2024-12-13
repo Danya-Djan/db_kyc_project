@@ -4,6 +4,6 @@ import pydantic
 
 
 class Click(pydantic.BaseModel):
-    UserID: int
-    DateTime: datetime.datetime
-    Value: decimal.Decimal
+    userId: int
+    dateTime: datetime.datetime
+    value: decimal.Decimal

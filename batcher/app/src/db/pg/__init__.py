@@ -1,1 +1,1 @@
-from .pg import get_pg, migrate
+from .pg import get_pg, migrate, connect_pg

@@ -5,10 +5,10 @@ import redis.asyncio as redis
 
 
 async def get_period_sum(r: redis.Redis, user_id: int, period: int) -> decimal.Decimal:
-    sum_str = await r.get(f'period_{period}_user_{user_id}')
-    if sum_str is None:
+    sum_bytes = await r.get(f'period_{period}_user_{user_id}')
+    if sum_bytes is None:
         return decimal.Decimal(0)
-    return decimal.Decimal(sum_str)
+    return decimal.Decimal(sum_bytes.decode())
 
 
 async def incr_period_sum(r: redis.Redis, user_id: int, _period: int, value: decimal.Decimal) -> decimal.Decimal:
@@ -16,10 +16,10 @@ async def incr_period_sum(r: redis.Redis, user_id: int, _period: int, value: dec
 
 
 async def get_max_period_sum(r: redis.Redis, _period: int) -> decimal.Decimal:
-    max_sum_str = await r.get(f'max_period_{_period}')
-    if max_sum_str is None:
+    max_sum_bytes = await r.get(f'max_period_{_period}')
+    if max_sum_bytes is None:
         return decimal.Decimal(0)
-    return decimal.Decimal(max_sum_str)
+    return decimal.Decimal(max_sum_bytes.decode())
 
 
 async def compare_max_period_sum(r: redis.Redis, _period: int, _sum: decimal.Decimal) -> None:
@@ -64,10 +64,10 @@ async def decr_energy(r: redis.Redis, user_id: int, amount: int) -> (int, int):
 
 
 async def get_global_average(r: redis.Redis) -> decimal.Decimal:
-    avg_str = await r.get('global_average')
-    if avg_str is None:
+    avg_bytes = await r.get('global_average')
+    if avg_bytes is None:
         return decimal.Decimal(0)
-    return decimal.Decimal(avg_str)
+    return decimal.Decimal(avg_bytes.decode())
 
 
 async def update_global_average(r: redis.Redis, value_to_add: decimal.Decimal) -> decimal.Decimal:
@@ -75,14 +75,14 @@ async def update_global_average(r: redis.Redis, value_to_add: decimal.Decimal) -
         local delta = tonumber(ARGV[1]) / tonumber(redis.call('GET', KEYS[1]))
         return redis.call('INCRBYFLOAT', KEYS[2], delta)
     ''')
-    return decimal.Decimal(await _script(keys=["user_count", "global_average"], args=[float(value_to_add)]))
+    return decimal.Decimal((await _script(keys=["user_count", "global_average"], args=[float(value_to_add)])).decode())
 
 
 async def get_user_total(r: redis.Redis, user_id: int) -> decimal.Decimal:
-    total_str = await r.get(f'total_{user_id}')
-    if total_str is None:
+    total_bytes = await r.get(f'total_{user_id}')
+    if total_bytes is None:
         return decimal.Decimal(0)
-    return decimal.Decimal(total_str)
+    return decimal.Decimal(total_bytes.decode())
 
 
 async def incr_user_count_if_no_clicks(r: redis.Redis, user_id: int) -> int:
@@ -111,7 +111,10 @@ async def incr_user_total(r: redis.Redis, user_id: int, value: decimal.Decimal) 
 
 
 async def get_user_session(r: redis.Redis, user_id: int) -> Optional[str]:
-    return await r.get(f'session_{user_id}')
+    session_bytes = await r.get(f'session_{user_id}')
+    if session_bytes is None:
+        return None
+    return session_bytes.decode()
 
 
 async def set_user_session(r: redis.Redis, user_id: int, token: str) -> None:

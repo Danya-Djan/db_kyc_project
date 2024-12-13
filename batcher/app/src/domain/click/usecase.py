@@ -6,7 +6,7 @@ import redis.asyncio as redis
 import aio_pika
 import asyncpg
 
-from batcher.app.src.domain.setting import get_setting
+from app.src.domain.setting import get_setting
 from .repos.redis import (
     get_period_sum, incr_period_sum, get_max_period_sum, get_user_total, get_global_average,
     incr_user_count_if_no_clicks, update_global_average, incr_user_total, compare_max_period_sum,
@@ -35,17 +35,16 @@ async def add_click_batch_copy(r: redis.Redis, pg: asyncpg.Connection,  rmq: aio
         await compare_max_period_sum(r, period, new_period_sum)
 
     click = Click(
-        UserID=user_id,
-        DateTime=datetime.now(),
-        Value=_click_value,
-
+        userId=user_id,
+        dateTime=datetime.now(),
+        value=_click_value,
     )
 
     # insert click
     await bulk_store_copy(pg, click, count)
 
     # send click to backend
-    send_click_batch_copy(rmq, click, count)
+    await send_click_batch_copy(rmq, click, count)
 
     return click
 

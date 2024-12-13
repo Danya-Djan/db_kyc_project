@@ -6,5 +6,6 @@ set -o nounset
 set -o xtrace
 
 python manage.py migrate
+python manage.py send_settings
 python manage.py collectstatic --noinput --verbosity 0
 python manage.py runserver 0.0.0.0:8000

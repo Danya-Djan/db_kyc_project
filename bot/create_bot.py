@@ -5,7 +5,7 @@ token = os.getenv('TG_TOKEN', '7748003961:AAEIXu8NFICPabNaQP5JQ3AcY79nZdUbKdI')
 api_token = os.getenv('API_TOKEN', 'b43fa8ccea5b6dd5e889a8ad3890ce14ce36a8bc')  # TODO: remove
 backend_url = os.getenv('BACKEND_URL', 'http://backend:8000')
 request_url = f'{backend_url}/api'
-url = os.getenv('URL', 'https://google.com')
+url = os.getenv('APP_URL', 'https://google.com')
 bot_name = os.getenv('BOT_NAME', 'https://t.me/danyadjan_test_bot')
 
 bucket_name = 'brawny-basket'

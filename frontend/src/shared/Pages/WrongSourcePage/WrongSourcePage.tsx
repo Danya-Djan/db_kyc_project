@@ -11,7 +11,7 @@ export function WrongSourcePage() {
     <div className={styles.container} style={{ height: `${height}px` }}>
       <div className={styles.innerContainer}>
         <h1 style={ETextStyles.RwSb24100} className={styles.title}>Похоже вы вошли не по той ссылке...</h1>
-        <Button text='Войти через Telegram' onClick={() => document.location.href = 'https://t.me/sapphirecrown_bot'}/>
+        <Button text='Войти через Telegram' onClick={() => document.location.href = 'https://t.me/kyc_clicker_bot'}/>
       </div>
     </div>
   );

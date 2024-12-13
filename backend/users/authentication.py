@@ -33,7 +33,7 @@ class TelegramValidationAuthentication(authentication.BaseAuthentication):
         split_res = base64.b64decode(token).decode('utf-8').split(':')
         try:
             data_check_string = ':'.join(split_res[:-1]).strip().replace('/', '\\/')
-            hash = split_res[-1]
+            _hash = split_res[-1]
         except IndexError:
             raise exceptions.AuthenticationFailed('Invalid token format')
         secret = hmac.new(
@@ -46,7 +46,7 @@ class TelegramValidationAuthentication(authentication.BaseAuthentication):
             msg=data_check_string.encode('utf-8'),
             digestmod=hashlib.sha256
         ).hexdigest()
-        if hash != actual_hash:
+        if _hash != actual_hash:
             raise exceptions.AuthenticationFailed('Invalid token (hash check failed)')
 
         data_dict = dict([x.split('=') for x in data_check_string.split('\n')])

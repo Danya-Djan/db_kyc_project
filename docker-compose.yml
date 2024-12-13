@@ -1,5 +1,3 @@
-version: '3.9'
-
 volumes:
   db_data: {}
   batcher_db_data: {}
