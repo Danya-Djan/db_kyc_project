@@ -4,11 +4,12 @@ import base64
 import hashlib
 import json
 from fastapi import Header, HTTPException
+from typing import Tuple
 
 from .config import TG_TOKEN
 
 
-async def get_token_header(authorization: str = Header()) -> (int, str):
+async def get_token_header(authorization: str = Header()) -> Tuple[int, str]:
     if not authorization:
         raise HTTPException(status_code=403, detail='Unauthorized')
 
@@ -48,5 +49,4 @@ async def get_token_header(authorization: str = Header()) -> (int, str):
         raise HTTPException(status_code=403, detail='Unauthorized')
 
     user_info = json.loads(data_dict['user'])
-    return user_info['id'], authorization
-
+    return user_info['id'], token

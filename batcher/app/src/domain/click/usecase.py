@@ -5,6 +5,8 @@ import aiohttp
 import redis.asyncio as redis
 import aio_pika
 import asyncpg
+import base64
+from fastapi.exceptions import HTTPException
 
 from app.src.domain.setting import get_setting
 from .repos.redis import (
@@ -103,14 +105,26 @@ async def _has_any_clicks(r: redis.Redis, user_id: int) -> bool:
 
 
 async def _get_refresh_energy(r: redis.Redis, user_id: int, req_token: str) -> int:
+    new_auth_date = _auth_date_from_token(req_token)
     current_token = await get_user_session(r, user_id)
     if current_token != req_token:
+        if current_token is not None:
+            last_auth_date = _auth_date_from_token(current_token)
+            session_cooldown = get_setting('SESSION_COOLDOWN')
+            if new_auth_date - last_auth_date < session_cooldown:
+                raise HTTPException(status_code=403, detail='Unauthorized')
         session_energy = int(get_setting('SESSION_ENERGY'))
         await set_user_session(r, user_id, req_token)
         await set_energy(r, user_id, session_energy)
         return session_energy
     else:
         return await r_get_energy(r, user_id)
+
+def _auth_date_from_token(token):
+    split_res = base64.b64decode(token).decode('utf-8').split(':')
+    data_check_string = ':'.join(split_res[:-1]).strip().replace('/', '\\/')
+    data_dict = dict([x.split('=') for x in data_check_string.split('\n')])
+    return int(data_dict['auth_date'])
 
 
 async def check_energy(r: redis.Redis, user_id: int, amount: int, _token: str) -> Tuple[int, int]:
