@@ -1,23 +1,12 @@
-import asyncio
 from aiogram import Bot, Dispatcher, types
-import re
-import os
-import time
-import shutil
-import random
 from create_bot import bot, request_url, important_message, url, token, bucket_name, username, password, endpoint_url
 from req import check_register
-import urllib.request
 from messages import get_main_menu_message
-from aiogram.fsm.context import FSMContext
-from aiogram.fsm.state import State, StatesGroup
 from aiogram.enums import ParseMode
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove, InlineKeyboardMarkup, InlineKeyboardButton, WebAppInfo
 
 from loguru import logger
 
-import boto3
-from botocore.config import Config
 
 def get_answer_keyboard():
     button1 = InlineKeyboardButton(text='Главное меню', callback_data='main_menu')

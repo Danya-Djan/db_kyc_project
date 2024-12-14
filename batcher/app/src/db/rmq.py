@@ -1,5 +1,6 @@
 import asyncio
 import aio_pika
+import logging
 from starlette.requests import Request
 from aio_pika.abc import AbstractRobustConnection
 
@@ -7,6 +8,7 @@ from ..config import RMQ_HOST, RMQ_PORT, RMQ_USER, RMQ_PASSWORD
 
 
 fqdn = f'amqp://{RMQ_USER}:{str(RMQ_PASSWORD)}@{RMQ_HOST}:{RMQ_PORT}/'
+logger = logging.getLogger("uvicorn")
 
 async def get_connection() -> AbstractRobustConnection:
     while True:
@@ -14,6 +16,7 @@ async def get_connection() -> AbstractRobustConnection:
             conn = await aio_pika.connect_robust(fqdn)
             return conn
         except ConnectionError:
+            logger.info("RabbitMQ is unavailable - sleeping")
             await asyncio.sleep(2)
 
 
