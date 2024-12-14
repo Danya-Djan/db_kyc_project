@@ -1,7 +1,8 @@
 import os
 from pymemcache.client import base
 
-client = base.Client((os.getenv('mem_host', 'localhost'), os.getenv('mem_port', 11211)))
+
+client = base.Client((os.getenv('MEMCACHED_HOST', 'localhost'), os.getenv('MEMCACHED_PORT', 11211)))
 
 def add_rec(key, value):
     client.set(str(key), value)

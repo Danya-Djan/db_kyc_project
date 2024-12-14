@@ -20,6 +20,7 @@ services:
       - .env/prod/back
       - .env/prod/rmq
       - .env/prod/bot
+      - .env/prod/web
 
   bot:
     build:
@@ -35,10 +36,9 @@ services:
       - .env/prod/web
     command: /gunicorn.sh
     restart: on-failure
-#
-#  memcached:
-#    container_name: memcached
-#    image: memcached:latest
+
+  memcached:
+   image: memcached:latest
 
   postgres:
     image: postgres:14.5-alpine

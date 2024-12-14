@@ -1,0 +1,24 @@
+[2024-04-23 10:56:24,265.265] INFO [281472819871024] - Started server process [6]
+[2024-04-23 10:56:24,266.266] INFO [281472819871024] - Waiting for application startup.
+[2024-04-23 10:56:24,881.881] INFO [281472819871024] - Application startup complete.
+[2024-04-23 10:56:24,884.884] INFO [281472819871024] - Uvicorn running on http://0.0.0.0:7313 (Press CTRL+C to quit)
+[2024-04-23 10:59:42,468.468] INFO [281473536830768] - Started server process [7]
+[2024-04-23 10:59:42,469.469] INFO [281473536830768] - Waiting for application startup.
+[2024-04-23 10:59:42,795.795] INFO [281473536830768] - Application startup complete.
+[2024-04-23 10:59:42,796.796] INFO [281473536830768] - Uvicorn running on http://0.0.0.0:7313 (Press CTRL+C to quit)
+[2024-04-23 11:02:47,807.807] INFO [281473265835312] - Started server process [7]
+[2024-04-23 11:02:47,808.808] INFO [281473265835312] - Waiting for application startup.
+[2024-04-23 11:02:48,548.548] INFO [281473265835312] - Application startup complete.
+[2024-04-23 11:02:48,550.550] INFO [281473265835312] - Uvicorn running on http://0.0.0.0:7313 (Press CTRL+C to quit)
+[2024-04-23 11:13:06,927.927] INFO [281473290341680] - Started server process [7]
+[2024-04-23 11:13:06,928.928] INFO [281473290341680] - Waiting for application startup.
+[2024-04-23 11:13:07,328.328] INFO [281473290341680] - Application startup complete.
+[2024-04-23 11:13:07,330.330] INFO [281473290341680] - Uvicorn running on http://0.0.0.0:7313 (Press CTRL+C to quit)
+[2024-04-23 11:15:55,771.771] INFO [281473096789296] - Started server process [7]
+[2024-04-23 11:15:55,772.772] INFO [281473096789296] - Waiting for application startup.
+[2024-04-23 11:15:56,162.162] INFO [281473096789296] - Application startup complete.
+[2024-04-23 11:15:56,166.166] INFO [281473096789296] - Uvicorn running on http://0.0.0.0:7313 (Press CTRL+C to quit)
+[2024-04-23 11:23:02,164.164] INFO [281473311243568] - Started server process [7]
+[2024-04-23 11:23:02,165.165] INFO [281473311243568] - Waiting for application startup.
+[2024-04-23 11:23:02,508.508] INFO [281473311243568] - Application startup complete.
+[2024-04-23 11:23:02,519.519] INFO [281473311243568] - Uvicorn running on http://0.0.0.0:7313 (Press CTRL+C to quit)

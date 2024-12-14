@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
 from pathlib import Path
+import re
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,8 +27,13 @@ DEBUG = int(os.getenv('DEBUG', 0))
 PROD = 1 - DEBUG
 
 ALLOWED_HOSTS = ['backend', '127.0.0.1']
+CSRF_TRUSTED_ORIGINS = []
 if app_url := os.getenv('APP_URL', None):
-    ALLOWED_HOSTS.append(app_url)
+    CSRF_TRUSTED_ORIGINS.append(app_url)
+    url_re = re.compile(r"https?://(www\.)?")
+    app_url_strippped = url_re.sub('', app_url).strip().strip('/')
+    ALLOWED_HOSTS.append(app_url_strippped)
+   
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True

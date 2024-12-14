@@ -1,10 +1,12 @@
-from aiogram import Bot, Dispatcher, Router, types
-from aiogram.fsm.storage.memory import MemoryStorage
-from create_bot import bot, WEBHOOK_URL
+import logging
+from aiogram import Bot, types
+from aiogram.dispatcher import Dispatcher
+from create_bot import bot, token, WEBHOOK_URL
 from handlers.register_handlers import register_all_handlers
+from aiogram.contrib.fsm_storage.memory import MemoryStorage
 from loguru import logger
 
-dp = Dispatcher(storage=MemoryStorage())
+dp = Dispatcher(bot, storage=MemoryStorage())
 
 logger.add("logs.log", format = "{time} | {module} : {function} | {level} | {message}", level = "INFO", rotation = "1 week", compression = "zip")#, serialize = True)
 
@@ -17,9 +19,7 @@ async def on_startup():
             drop_pending_updates=True
         )
 
-    router = Router()
-    register_all_handlers(router)
-    dp.include_router(router)
+    register_all_handlers(dp)
 
 
 async def on_shutdown():

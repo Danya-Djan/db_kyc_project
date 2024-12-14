@@ -1,6 +1,6 @@
-from aiogram import Router
-from aiogram.filters import Command
-from aiogram import F
+from aiogram import Dispatcher, types
+from aiogram.dispatcher.filters import Text
+from aiogram.types.message import ContentType
 
 from handlers.start_handler import (command_start,
                                     get_main_menu_answer,
@@ -11,17 +11,17 @@ from handlers.instruction import (instruction_message,
 
 
 
-def register_all_handlers(router: Router):
-    handle_register_start_message(router)
-    handle_instruction_message(router)
+def register_all_handlers(dp: Dispatcher):
+    handle_register_start_message(dp)
+    handle_instruction_message(dp)
     
     
-def handle_register_start_message(router: Router):
-    router.message.register(command_start, Command(commands=["start"]))
-    router.callback_query.register(get_main_menu_after_picture, F.data.startswith('main_menu_delete'))
-    router.callback_query.register(get_main_menu_answer, F.data.startswith('main_menu'))
-    router.callback_query.register(instruction_message, F.data.startswith("instruction_inline"))
+def handle_register_start_message(dp: Dispatcher):
+    dp.register_message_handler(command_start, commands=['start'])
+    dp.register_callback_query_handler(get_main_menu_answer, Text(equals='main_menu'))
+    dp.register_callback_query_handler(instruction_message, Text(equals="instruction_inline"))
+    dp.register_callback_query_handler(get_main_menu_after_picture, Text(equals='main_menu_delete'))
     
-def handle_instruction_message(router: Router):
-    router.callback_query.register(callbacks_instruction, F.data.startswith("num_"))
+def handle_instruction_message(dp: Dispatcher):
+    dp.register_callback_query_handler(callbacks_instruction, Text(startswith="num_"))
 
