@@ -8,7 +8,7 @@ from aiogram.dispatcher.filters.state import State, StatesGroup
 from create_bot import bot, important_message, event_number
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove, InlineKeyboardMarkup, InlineKeyboardButton
 from aiogram.utils.exceptions import MessageToDeleteNotFound
-from memcached_def import add_rec, get_rec
+from dbm_defs import add_rec, get_rec
 
 from loguru import logger
 

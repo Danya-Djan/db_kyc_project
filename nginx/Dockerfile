@@ -13,7 +13,11 @@ RUN npm run build
 
 # stage 2 - nginx
 FROM nginx:stable
+
 COPY nginx/nginx.conf /etc/nginx/nginx.conf
+
+COPY backend/static /static
+
 COPY --from=build-deps /app/dist/ /dist/
 
 CMD ["nginx", "-g", "daemon off;"]

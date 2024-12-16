@@ -11,13 +11,7 @@ fqdn = f'amqp://{RMQ_USER}:{str(RMQ_PASSWORD)}@{RMQ_HOST}:{RMQ_PORT}/'
 logger = logging.getLogger("uvicorn")
 
 async def get_connection() -> AbstractRobustConnection:
-    while True:
-        try:
-            conn = await aio_pika.connect_robust(fqdn)
-            return conn
-        except ConnectionError:
-            logger.info("RabbitMQ is unavailable - sleeping")
-            await asyncio.sleep(2)
+    return await aio_pika.connect_robust(fqdn)
 
 
 async def get_channel(conn_pool: AbstractRobustConnection) -> aio_pika.Channel:
