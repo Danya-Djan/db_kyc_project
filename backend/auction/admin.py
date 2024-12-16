@@ -44,26 +44,26 @@ class AuctionAdmin(admin.ModelAdmin):
 
     def view_product_link(self, obj):
         url = reverse("admin:auction_product_change", args=[obj.product_id])
-        return format_html(f'<a href="{url}">{obj.product.name} ({obj.product_id})</a>')
+        return format_html('<a href="{}">{} ({})</a>', url, obj.product.name, obj.product_id)
     view_product_link.short_description = 'Товар'
 
     def view_betters_link(self, obj):
         count = obj.betters.distinct().count()
         url = reverse('admin:users_tguser_changelist') + '?' + urlencode({'betters__pk': f'{obj.pk}'})
-        return format_html(f'<a href="{url}"> {count} users </a>')
+        return format_html('<a href="{}"> {} users </a>', url, count)
     view_betters_link.short_description = 'Пользователи, сделавшие ставки'
 
     def view_bets_link(self, obj):
         count = obj.bets.count()
         url = reverse('admin:auction_bet_changelist') + '?' + urlencode({'auction_id': f'{obj.pk}'})
-        return format_html(f'<a href="{url}"> {count} bets </a>')
+        return format_html('<a href="{}"> {} bets </a>', url, count)
     view_bets_link.short_description = 'Ставки'
 
     def view_winners_link(self, obj):
         winning_user_ids = obj.bets.filter(_is_winning=True).values_list('user_id', flat=True)
         count = winning_user_ids.count()
         url = reverse('admin:users_tguser_changelist') + '?' + urlencode({'pk__in': ','.join(map(str, winning_user_ids))})
-        return format_html(f'<a href="{url}"> {count} победителей </a>')
+        return format_html('<a href="{}"> {} победителей </a>', url, count)
     view_winners_link.short_description = 'Победители'
 
 
@@ -86,7 +86,7 @@ class ProductAdmin(admin.ModelAdmin):
     def view_auctions_link(self, obj):
         count = obj.auctions.count()
         url = reverse('admin:auction_auction_changelist') + '?' + urlencode({'product_id': f'{obj.pk}'})
-        return format_html(f'<a href="{url}"> {count} auctions </a>')
+        return format_html('<a href="{}"> {} auctions </a>', url, count)
     view_auctions_link.short_description = 'Аукционы'
 
 
@@ -132,16 +132,16 @@ class BetAdmin(admin.ModelAdmin):
 
     def view_user_link(self, obj):
         url = reverse("admin:users_tguser_change", args=[obj.user_id])
-        return format_html(f'<a href="{url}">{obj.user}</a>')
+        return format_html('<a href="{}">{}</a>', url, obj.user)
     view_user_link.short_description = 'Пользователь'
 
     def view_auction_link(self, obj):
         url = reverse("admin:auction_auction_change", args=[obj.auction_id])
-        return format_html(f'<a href="{url}">{obj.auction}</a>')
+        return format_html('<a href="{}">{}</a>', url, obj.auction)
     view_auction_link.short_description = 'Аукцион'
 
     def view_transactions_link(self, obj):
         count = obj.transactions.count()
         url = reverse('admin:users_bettransaction_changelist') + '?' + urlencode({'bet_id': f'{obj.pk}'})
-        return format_html(f'<a href="{url}"> {count} transactions </a>')
+        return format_html('<a href="{}"> {} transactions </a>', url, count)
     view_transactions_link.short_description = 'Транзакции'

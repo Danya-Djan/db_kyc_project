@@ -28,10 +28,10 @@ class ClickAdmin(admin.ModelAdmin):
 
     def view_user_link(self, obj):
         url = reverse("admin:users_tguser_change", args=[obj.user_id])
-        return format_html(f'<a href="{url}">{obj.user}</a>')
+        return format_html('<a href="{}">{}</a>', url, obj.user)
     view_user_link.short_description = 'Пользователь'
 
     def view_transaction_link(self, obj):
         url = reverse("admin:users_clicktransaction_change", args=[obj.transaction.id])
-        return format_html(f'<a href="{url}">{obj.transaction}</a>')
+        return format_html('<a href="{}">{}</a>', url, obj.transaction)
     view_transaction_link.short_description = 'Транзакция'
