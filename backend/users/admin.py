@@ -58,20 +58,20 @@ class TGUserAdmin(admin.ModelAdmin):
 
     def view_user_link(self, obj):
         url = reverse("admin:auth_user_change", args=[obj.user_id])
-        return format_html(f'<a href="{url}">{obj.user.username} ({obj.user_id})</a>')
+        return format_html('<a href="{}">{} ({})</a>', url, obj.user.username, obj.user_id)
     view_user_link.short_description = 'Системный пользователь'
 
     def view_referred_by_link(self, obj):
         if not obj.referred_by:
             return
         url = reverse("admin:users_tguser_change", args=[obj.referred_by.tg_id])
-        return format_html(f'<a href="{url}">{obj.referred_by.username} ({obj.referred_by.tg_id})</a>')
+        return format_html('<a href="{}">{} ({})</a>', url, obj.referred_by.username, obj.referred_by.tg_id)
     view_referred_by_link.short_description = 'Кем был приглашен'
 
     def view_referred_users_link(self, obj):
         count = obj.referrees.count()
         url = reverse('admin:users_tguser_changelist') + '?' + urlencode({'referred_by__tg_id': f'{obj.tg_id}'})
-        return format_html(f'<a href="{url}"> {count} users </a>')
+        return format_html('<a href="{}"> {} users </a>', url, count)
     view_referred_users_link.short_description = 'Приглашенные пользователи'
 
     def view_transactions(self, obj):
@@ -82,26 +82,25 @@ class TGUserAdmin(admin.ModelAdmin):
         referral_url = reverse('admin:users_referraltransaction_changelist') + '?' + urlencode({'user_id': f'{obj.tg_id}'})
 
         return format_html(
-            f'<a href="{all_url}"> все </a> // '
-            f'<a href="{click_url}"> клики </a> // '
-            f'<a href="{bet_url}"> ставки </a> // '
-            f'<a href="{commission_url}"> комиссии </a> // '
-            f'<a href="{referral_url}"> реферальная программа </a>'
+            '<a href="{}"> все </a> // '
+            '<a href="{}"> клики </a> // '
+            '<a href="{}"> ставки </a> // '
+            '<a href="{}"> комиссии </a> // '
+            '<a href="{}"> реферальная программа </a>',
+            all_url, click_url, bet_url, commission_url, referral_url
         )
     view_transactions.short_description = 'Транзакции'
 
     def view_clicks_link(self, obj):
         count = obj.clicks.count()
         url = reverse('admin:clicks_click_changelist') + '?' + urlencode({'user_id': f'{obj.tg_id}'})
-        return format_html(f'<a href="{url}"> {count} clicks </a>')
+        return format_html('<a href="{}"> {} clicks </a>', url, count)
     view_clicks_link.short_description = 'Клики'
 
     @admin.action(description="Создать рассылку для выбранных пользователей")
     def create_mailing_list(self, request, queryset):
         request.session['user_ids'] = list(queryset.values_list('pk', flat=True))
-        return HttpResponseRedirect(
-            f'/admin/users/mailinglist/add/'
-        )
+        return HttpResponseRedirect(reverse('admin:users_mailinglist_add'))
 
 
 class MailingListAdminForm(forms.ModelForm):
@@ -162,14 +161,14 @@ class MailingListReceiverInfoAdmin(admin.ModelAdmin):
         if not obj.user:
             return None
         link = reverse("admin:users_tguser_change", args=[obj.user.tg_id])
-        return format_html(f'<a href="{link}">{obj.user}</a>')
+        return format_html('<a href="{}">{}</a>', link, obj.user)
     view_user_link.short_description = 'Пользователь'
 
     def view_mailing_list_link(self, obj):
         if not obj.mailing_list:
             return None
         link = reverse("admin:users_mailinglist_change", args=[obj.mailing_list.pk])
-        return format_html(f'<a href="{link}">{obj.mailing_list}</a>')
+        return format_html('<a href="{}">{}</a>', link, obj.mailing_list)
     view_mailing_list_link.short_description = 'Рассылка'
 
 
@@ -205,28 +204,28 @@ class MailingListAdmin(admin.ModelAdmin):
         count = obj.users.count()
         url = reverse('admin:users_tguser_changelist') + '?' + urlencode(
             {'mailing_lists__id': f'{obj.id}'})
-        return format_html(f'<a href="{url}"> {count} пользователей </a>')
+        return format_html('<a href="{}"> {} пользователей </a>', url, count)
     view_users_link.short_description = 'Пользователи'
 
     def view_mailing_list_receiver_infos_link(self, obj):
         count = obj.mailing_list_receiver_infos.count()
         url = reverse('admin:users_mailinglistreceiverinfo_changelist') + '?' + urlencode(
             {'mailing_list_id': f'{obj.id}'})
-        return format_html(f'<a href="{url}"> {count} получателей </a>')
+        return format_html('<a href="{}"> {} получателей </a>', url, count)
     view_mailing_list_receiver_infos_link.short_description = 'Информация о получателях'
 
     def view_main_button_link(self, obj):
         if not obj.main_button:
             return
         url = reverse("admin:misc_button_change", args=[obj.main_button_id])
-        return format_html(f'<a href="{url}"> Кнопка №{obj.main_button_id}</a>')
+        return format_html('<a href="{}"> Кнопка №{}</a>', url, obj.main_button_id)
     view_main_button_link.short_description = 'Основная кнопка'
 
     def view_webapp_button_link(self, obj):
         if not obj.webapp_button:
             return
         url = reverse("admin:misc_button_change", args=[obj.webapp_button_id])
-        return format_html(f'<a href="{url}"> Кнопка №{obj.webapp_button_id}</a>')
+        return format_html('<a href="{}"> Кнопка №{}</a>', url, obj.webapp_button_id)
     view_webapp_button_link.short_description = 'Кнопка, открывающая вебапп'
 
 
@@ -242,7 +241,7 @@ class TransactionChildAdmin(PolymorphicChildModelAdmin):
         if not obj.user:
             return
         url = reverse("admin:users_tguser_change", args=[obj.user.tg_id])
-        return format_html(f'<a href="{url}">{obj.user}</a>')
+        return format_html('<a href="{}">{}</a>', url, obj.user)
     view_user_link.short_description = 'Пользователь'
 
     def has_delete_permission(self, request, obj=None):
@@ -269,7 +268,7 @@ class ClickTransactionAdmin(TransactionChildAdmin):
 
     def view_click_link(self, obj):
         link = reverse("admin:clicks_click_change", args=[obj.click_id])
-        return format_html(f'<a href="{link}"> {obj.click}</a>')
+        return format_html('<a href="{}"> {}</a>', link, obj.click)
     view_click_link.short_description = 'Клик'
 
 
@@ -293,7 +292,7 @@ class BetTransactionAdmin(TransactionChildAdmin):
 
     def view_bet_link(self, obj):
         link = reverse("admin:auction_bet_change", args=[obj.bet_id])
-        return format_html(f'<a href="{link}">{obj.bet}</a>')
+        return format_html('<a href="{}">{}</a>', link, obj.bet)
     view_bet_link.short_description = 'Ставка'
 
     def view_commission_link(self, obj):
@@ -302,7 +301,7 @@ class BetTransactionAdmin(TransactionChildAdmin):
         except ObjectDoesNotExist:
             return None
         link = reverse("admin:users_commissiontransaction_change", args=[obj.commission.id])
-        return format_html(f'<a href="{link}"> {obj.commission} </a>')
+        return format_html('<a href="{}"> {} </a>', link, obj.commission)
     view_commission_link.short_description = 'Комиссия'
 
     def view_refunded_by_link(self, obj):
@@ -311,14 +310,14 @@ class BetTransactionAdmin(TransactionChildAdmin):
         except ObjectDoesNotExist:
             return None
         link = reverse("admin:users_bettransaction_change", args=[obj.refunded_by.id])
-        return format_html(f'<a href="{link}"> {obj.refunded_by} </a>')
+        return format_html('<a href="{}"> {} </a>', link, obj.refunded_by)
     view_refunded_by_link.short_description = 'Чем компенсирована'
 
     def view_refund_to_link(self, obj):
         if not obj.refund_to:
             return None
         link = reverse("admin:users_bettransaction_change", args=[obj.refund_to_id])
-        return format_html(f'<a href="{link}"> {obj.refund_to} </a>')
+        return format_html('<a href="{}"> {} </a>', link, obj.refund_to)
     view_refund_to_link.short_description = 'Что компенсирует'
 
 
@@ -339,7 +338,7 @@ class CommissionTransactionAdmin(TransactionChildAdmin):
 
     def view_bet_transaction_link(self, obj):
         link = reverse("admin:users_bettransaction_change", args=[obj.parent_transaction])
-        return format_html(f'<a href="{link}"> {obj.parent_transaction} </a>')
+        return format_html('<a href="{}"> {} </a>', link, obj.parent_transaction)
     view_bet_transaction_link.short_description = 'Родительская транзакция'
 
 
@@ -389,7 +388,7 @@ class TransactionParentAdmin(PolymorphicParentModelAdmin):
         if not obj.user:
             return
         url = reverse("admin:users_tguser_change", args=[obj.user.tg_id])
-        return format_html(f'<a href="{url}">{obj.user}</a>')
+        return format_html('<a href="{}">{}</a>', url, obj.user)
     view_user_link.short_description = 'Пользователь'
 
     def view_type(self, obj):

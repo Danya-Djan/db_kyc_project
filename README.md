@@ -17,11 +17,11 @@ This clicker bot combines fun and strategy, making it a unique experience for Te
 
 Our project leverages a modern technology stack to ensure scalability, performance, and seamless user interactions:
 
-- **Frontend**: [React.js, Vue.js, etc.]
+- **Frontend**: [React, Typescript]
 - **Backend**: [Django, Flask, etc.]
-- **Database**: [PostgreSQL, MongoDB, MySQL, etc.]
+- **Database**: [PostgreSQL]
 - **Authentication**: [JWT, OAuth, etc.]
-- **Deployment**: [Docker, Kubernetes, AWS, etc.]
+- **Deployment**: [Docker]
 
 We have structured our architecture for flexibility and ease of integration with future features.
 
@@ -29,9 +29,9 @@ We have structured our architecture for flexibility and ease of integration with
 
 The project is a collaboration of skilled and passionate individuals:
 
-2. **Michael Kostochka**: [Role: Backend Developer] - Ensures smooth operations behind the scenes with efficient APIs.
-3. **Sitnikov Arseniy**: [Role: Database Architect] - Responsible for managing data flows and ensuring high performance.
-4. **Vakulenkov Danila**: [Role: DevOps Engineer] - Orchestrates deployment, monitoring, and infrastructure management.
+2. **Michael Kostochka**: [Role: Backend Developer, Database Architect]
+3. **Sitnikov Arseniy**: [Role: Frontend Developer, Database Architect]
+4. **Vakulenkov Danila**: [Role: Backend Engineer, Database Architect]
 
 ## 🎨 **Visuals**
 
@@ -49,51 +49,22 @@ git clone https://github.com/Danya-Djan/db_kyc_project.git
 cd db_kyc_project
 ```
 
-### **2. Install Dependencies**
+### **2. Environment Setup**
 
-Ensure you have [Node.js](https://nodejs.org/) and [Docker](https://www.docker.com/) installed.
+Create a `.env` file in the root of the project and add the needed variables
 
-For **Frontend**:
-
-```bash
-cd frontend
-```
-
-For **Backend**:
-
-```bash
-cd backend
-```
-
-### **3. Environment Setup**
-
-Create a `.env` file in the root of the project and add the following variables:
-
-```
-DB_HOST=localhost
-DB_USER=[your-db-user]
-DB_PASS=[your-db-password]
-JWT_SECRET=[your-secret]
-```
-
-### **4. Run the Project**
+### **3. Run the Project**
 
 To start both frontend and backend servers in development mode:
 
 For **Frontend and Backend**:
 
 ```bash
-docker-compose up
+docker-compose up --build
 ```
-
-You can access the application at `http://localhost:3000`.
-
-## 🤝 **Contributing**
-
-We welcome contributions! Please read our [CONTRIBUTING.md](link_to_contributing_file) for details on our code of conduct and the process for submitting pull requests.
 
 ## 📜 **License**
 
-This project is licensed under the [MIPT License](link_to_license_file).
+This project is licensed under the [MIPT License](https://github.com/MIPT-ILab/MDSP/blob/master/LICENSE).
 
 ---
