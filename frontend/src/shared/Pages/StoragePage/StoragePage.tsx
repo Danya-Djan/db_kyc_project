@@ -10,12 +10,14 @@ import { StoragePageBlock } from '../../Storage/StoragePageBlock';
 import { FriendsPageBlock } from '../../Storage/FriendsPageBlock';
 import { useAppSelector } from '../../hooks/useAppSelector';
 import { useNavigate } from 'react-router-dom';
+import { isWhiteList } from '../../../utils/isWhiteList';
 
 export function StoragePage() {
   const userId = useAppSelector<string>(state => state.userTg.id);
   const [page, setPage] = useState('storage');
   const refLink = `https://t.me/kyc_clicker_bot?start=user_${userId}`;
   const [showNotif, setShow] = useState(false);
+  const [isDev, setIsDev] = useState(false);
   const navigate = useNavigate();
 
   return (
@@ -23,9 +25,8 @@ export function StoragePage() {
       <h1 style={ETextStyles.RwSb30100} className={styles.title}>Реферальная программа</h1>
       <div className={styles.btnGroup}>
         <StorageBtn active={page === 'storage'} type={'storage'} onClick={() => setPage('storage')}/>
-        <StorageBtn isDev={true} active={page === 'friends'} type={'friends'} onClick={() => {
-          navigate('/dev?type=friends')
-          //setPage('friends')
+        <StorageBtn isDev={isDev} active={page === 'friends'} type={'friends'} onClick={() => {
+          isDev ? navigate('/dev?type=friends') : setPage('friends')
         }
           } />
       </div>

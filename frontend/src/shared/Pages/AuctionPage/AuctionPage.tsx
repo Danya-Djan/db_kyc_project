@@ -1,17 +1,41 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './auctionpage.module.css';
 import { ETextStyles } from '../../texts';
 import { AuctionCard } from '../../Auction/AuctionCard';
+import { useAuctionData } from '../../hooks/useAuctionData';
+import { Spinner } from '../../Elements/Spinner';
+import { ErrorPage } from '../ErrorPage';
 
 export function AuctionPage() {
-  const imgs = ['https://cdn.dribbble.com/userupload/11863775/file/original-6009708366fadd352f61fbaf0db5acee.png?resize=1200x853',
-    'https://cdn.dribbble.com/userupload/10040892/file/original-850d482568c1f1c870b7066113903bd2.png?resize=1200x900',
-    'https://cdn.dribbble.com/users/9735273/screenshots/19338580/media/6657322ea7990bd504427ed1b171be3d.png?resize=1200x900']
+  const { dataAuction, loadingAuction, errorAuction } = useAuctionData();
+  const [auctionBlock, setAuctionBlock] = useState( <div></div> );
+
+  useEffect(() => {
+    if(dataAuction.length != 0) {
+      const newBlock = dataAuction.map(item => {
+        if (item.productName && item.productCover && item.initialCost && item.time && item.winnersNumber && item.commission && item.id && item.isLead != undefined && item.myBet != undefined)
+          return <AuctionCard className={styles.card} auctionId={item.id} key={`${item.id}${JSON.stringify(dataAuction)}`} name={item.productName} imgs={[item.productCover]} users={item.winnersNumber} prevBet={item.initialCost} myBetInit={item.myBet} time={item.time} isLead={item.isLead} commission={item.commission}/>
+      });
+
+      //@ts-ignore
+      setAuctionBlock(newBlock);
+    }
+  }, [dataAuction]);
 
   return (
     <div>
-      <h1 className={styles.title} style={ETextStyles.RwSb26100}> <span>Соревнуйся за товары</span> на аукционе!</h1>
-      <AuctionCard name='iPhone 15 Pro Max, 256gb, Natural Titanium' imgs={imgs} minBet='200' users={23} prevBet='290' myBetInit='0' time={86400} isLead={false}/>
+      {loadingAuction && <div className={styles.spinnerContainer}><Spinner color='#FFFFFF' size='40px' thickness='6px' className={styles.spinner} /></div>}
+      {!loadingAuction && <div>
+        {errorAuction ? <ErrorPage fullScreen={true} title='Возникла ошибка загрузки аукционов' text='Перезагрузите страницу или попробуйте позже' detail={errorAuction} /> :
+        <div>
+            <h1 className={styles.title} style={ETextStyles.RwSb26100}> <span>Соревнуйся за товары</span> на аукционе!</h1>
+            {dataAuction.length != 0 ? auctionBlock
+              : <p style={ETextStyles.InRg14120}>Скоро тут появятся новые аукционы.</p>
+          }
+        </div>
+        }
+      </div>
+      }
     </div>
   );
 }

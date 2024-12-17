@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { ETextStyles } from '../../texts';
 import { ProductCard } from '../ProductCard';
 import { Button } from '../../Button';
+import { generateRandomString } from '../../../utils/generateRandom';
 
 interface IProduct {
   name: string,
@@ -28,7 +29,7 @@ export function AuctionLosePopup({ items, setClose }: IAuctionLosePopup) {
       <h3 className={styles.title2} style={ETextStyles.RwSb18120}>Аукционы, в&nbsp;которых нужно увеличить ставку:</h3>
       <div className={styles.cards}>
         {items.map(item => {
-          return <ProductCard name={item.name} img={item.img} bet={item.bet} />
+          return <ProductCard key={ generateRandomString() } name={item.name} img={item.img} bet={item.bet} />
         })}
       </div>
       <Button text='Увеличить ставку' onClick={() => { navigate('/auction'); setClose(true) }} />

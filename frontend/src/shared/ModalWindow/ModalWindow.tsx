@@ -10,9 +10,10 @@ interface IModalWindow {
   removeBtn ?: boolean,
   closeAnimOut?: boolean,
   setCloseAnimOut(a: boolean): void,
+  isReload?: boolean,
 }
 
-export function ModalWindow({ modalBlock, setClose, removeBtn, closeAnimOut, setCloseAnimOut }: IModalWindow) {
+export function ModalWindow({ modalBlock, setClose, removeBtn, closeAnimOut, setCloseAnimOut, isReload=false }: IModalWindow) {
   const node = document.querySelector('#modal_root');
   const [closeAnim, setCloseAnim] = useState(false);
   const html = document.querySelector('html');
@@ -34,6 +35,9 @@ export function ModalWindow({ modalBlock, setClose, removeBtn, closeAnimOut, set
     const timer = setTimeout(() => {
       setClose(true);
       clearTimeout(timer);
+      if(isReload) {
+        window.location.reload();
+      }
     }, 400);
   }
 

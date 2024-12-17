@@ -20,6 +20,7 @@ export function useTgData() {
             if (token.length != 0 && user.id && user.id.length != 0) {
                 setVerified(true);
                 dispatch<any>(saveToken(token));
+                //dispatch<any>(saveToken(savedToken));
                 dispatch<any>(setUserTg(user));
             } else {
                 setVerified(false);

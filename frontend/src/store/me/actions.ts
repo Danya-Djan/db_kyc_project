@@ -3,6 +3,14 @@ import { ThunkAction } from "redux-thunk";
 import { RootState } from "../reducer";
 import axios from "axios";
 import { saveMult } from "../mult";
+import { saveToken } from "../token";
+
+export interface IAuctionItem {
+    id: string,
+    name: string,
+    img: string,
+    bet: string
+}
 
 export interface IUserData {
     tgId?: number;
@@ -13,6 +21,10 @@ export interface IUserData {
     energy?: string;
     referralStorage?: string;
     maxStorage: number;
+    rank ?: number,
+    loseAuctions?: Array<IAuctionItem>,
+    topAuctions?: Array<IAuctionItem>,
+    winAuctions?: Array<IAuctionItem>,
 }
 
 export const ME_REQUEST = 'ME_REQUEST';
@@ -66,8 +78,10 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
     }
 
     const firstClick = (token: string) => {
-        axios.post(`${URLClick}/api/v1/click/`,
-            {},
+        axios.post(`${URLClick}/api/v1/batch-click/`,
+            {
+                count: 1
+            },
             {
                 headers: {
                     "Authorization": `TelegramToken ${token}`
@@ -78,6 +92,9 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
             dispatch<any>(saveMult(click));
             const clickCode = btoa(click.toString());
             sessionStorage.setItem('mt', clickCode);
+
+            const energy = Number(resp.data.energy);
+            dispatch<any>(updateEnergyRequestAsync(energy));
         });
     };
 
@@ -97,6 +114,8 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
         },
         ).then((resp) => {
             const user = resp.data;
+            sessionStorage.setItem('shT', 't');
+            sessionStorage.setItem('shL', 't');
             axios.get(`${URLClick}/api/v1/energy`, {
                 headers: {
                     //"Content-type": "application/json",
@@ -145,6 +164,7 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
                     maxStorage: Number(user.max_storage)
                 };
                 dispatch(meRequestSuccess(userData));
+                loadNewRank();
             }).catch((err) => {
                 console.log(err);
                 if (err.response.data.detail) {
@@ -163,14 +183,14 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
         })
     }
     /*if (tgId && Url && !meData.username) {
-        axios.get(`${Url}/api/internal/users/get-token/123456`, {
+        axios.get(`${Url}/api/internal/users/get-token/${tgId}`, {
             headers: {
                 "Content-type": "application/json"
             }
         },
         ).then((resp) => {
             const token = resp.data.token;
-            getState().token = token;
+            dispatch<any>(saveToken(resp.data.token));
             if (token && !meData.username) {
                 dispatch(meRequest());
                 let urlUser = '';
@@ -186,6 +206,8 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
                     }
                 },
                 ).then((resp) => {
+                    sessionStorage.setItem('shT', 't');
+                    sessionStorage.setItem('shL', 't');
                     const user = resp.data;
                     let avatar = user.avatar;
                     if (!avatar) {
@@ -235,6 +257,7 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
                             maxStorage: Number(user.max_storage)
                         };
                         dispatch(meRequestSuccess(userData));
+                        loadNewRank();
                     }).catch((err) => {
                         console.log(err);
                         if (err.response.data.detail) {
@@ -288,6 +311,7 @@ export const updatePointsRequestAsync = (): ThunkAction<void, RootState, unknown
             const newData = meData;
             newData.points = points;
             dispatch(meRequestSuccess(newData));
+            dispatch(loadNewRank());
         }).catch((err) => {
             console.log(err);
             dispatch(meRequestError(String(err)));
@@ -303,5 +327,55 @@ export const emptyReferralStorage = (): ThunkAction<void, RootState, unknown, Ac
     const referralPoints = Number(newData.referralStorage);
     newData.referralStorage = '0';
     newData.points = (Number(newData.points) + referralPoints).toString();
+    dispatch(meRequestSuccess(newData));
+}
+
+export const updateRank = (rank: number): ThunkAction<void, RootState, unknown, Action<string>> => (dispatch, getState) => {
+    const meData = getState().me.data;
+
+    let newData = meData;
+    newData.rank = rank;
+    dispatch(meRequestSuccess(newData));
+}
+
+export const loadNewRank = (): ThunkAction<void, RootState, unknown, Action<string>> => (dispatch, getState) => {
+    const token = getState().token;
+    const URL = getState().url;
+    const userTg = getState().userTg.id;
+    
+    if(token) {
+        axios.get(`${URL}/api/v1/users/rank/neighbours?limit=1`,
+            {
+                headers: {
+                    "Authorization": `TelegramToken ${token}`
+                }
+            }
+        ).then(resp => {
+            const data = resp.data;
+            if(data.length != 0) {
+                
+                for(let i = 0; i<data.length; i++) {
+                    if (Number(data[i].tg_id) === Number(userTg)) {
+                        dispatch<any>(updateRank(Number(data[i].rank)))
+                    }
+                }
+            }
+        })
+    }
+}
+
+
+export const updateMyAuctions = (data: Array<IAuctionItem>, type: string): ThunkAction<void, RootState, unknown, Action<string>> => (dispatch, getState) => {
+    const meData = getState().me.data;
+    let newData = meData;
+
+    if(type === 'top') {
+        newData.topAuctions = data;
+    } else if(type === 'win') {
+        newData.winAuctions = data;
+    } else {
+        newData.loseAuctions = data;
+    }
+
     dispatch(meRequestSuccess(newData));
 }

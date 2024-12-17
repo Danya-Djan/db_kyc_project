@@ -21,10 +21,10 @@
 
 .img {
     margin-right: 4px;
-    width: 20px;
+    /*width: 20px;
     height: 20px;
     border-radius: 20px;
-    background-color: var(--white);
+    background-color: var(--white);*/
 }
 
 .name {

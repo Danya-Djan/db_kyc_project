@@ -16,6 +16,7 @@ export function Timer({initTime}: ITimer) {
   const tick = () => {
     if (hour === 0 && min === 0 && sec === 0) {
       setOver(true);
+      window.location.reload();
     } else if (min === 0 && sec === 0) {
       setTime([hour - 1, 59, 59]);
     } else if (sec == 0) {
@@ -35,12 +36,12 @@ export function Timer({initTime}: ITimer) {
   return (
     <div className={styles.container}>
       <div className={styles.block}>
-        <p className={styles.value} style={ETextStyles.InSb14120}>{hour}</p>
+        <p className={styles.value} style={ETextStyles.InSb14120}>{hour.toString().length === 1 ? `0${hour}` : hour}</p>
         <p className={styles.text} style={ETextStyles.RwRg12120}>{declension(hour, 'час', 'часа', 'часов')}</p>
       </div>
       <div className={styles.dot}></div>
       <div className={styles.block}>
-        <p className={styles.value} style={ETextStyles.InSb14120}>{min}</p>
+        <p className={styles.value} style={ETextStyles.InSb14120}>{min.toString().length === 1 ? `0${min}` : min}</p>
         <p className={styles.text} style={ETextStyles.RwRg12120}>мин</p>
       </div>
       <div className={styles.dot}></div>

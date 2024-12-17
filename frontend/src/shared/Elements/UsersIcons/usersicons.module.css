@@ -3,11 +3,14 @@
 }
 
 .userIcon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: absolute;
     top: 0;
-    border-radius: 50%;
-    background-color: var(--grey6C);
-    border: 1px solid var(--grey12);
+    width: 20px;
+    height: 20px;
+    opacity: 0.8;
 }
 
 .userIcon1 {
@@ -17,8 +20,10 @@
 
 .userIcon2 {
     z-index: 2;
+    left: 14px;
 }
 
 .userIcon3 {
     z-index: 1;
+    left: 28px;
 }

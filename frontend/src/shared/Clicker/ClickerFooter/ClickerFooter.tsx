@@ -6,7 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 export function ClickerFooter() {
   const navigate = useNavigate();
-  const isDev = true;
+  const [isDev, setIsDev] = useState(false);
 
   return (
     <div className={styles.container}>

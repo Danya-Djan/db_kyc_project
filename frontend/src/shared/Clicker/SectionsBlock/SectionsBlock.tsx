@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { UsersIcons } from '../../Elements/UsersIcons';
 import { formatNumber } from '../../../utils/formatNumber';
 import { useAppSelector } from '../../hooks/useAppSelector';
+import { IUserRank } from '../../../store/friends/actions';
 
 interface ISectionsBlock {
   mult:number;
@@ -18,9 +19,25 @@ export function SectionsBlock({ mult }: ISectionsBlock) {
   const [close, setClose] = useState(true);
   const navigate = useNavigate();
   const referralStorage = Number(useAppSelector<string | undefined>(state => state.me.data.referralStorage));
-  //const referralStorage = 500;
   const maxReferralStorage = useAppSelector<number>(state => state.me.data.maxStorage);
   const [referralPercent, serReferralPercent] = useState(0);
+  const [isDev, setIsDev] = useState(false);
+  const userRank = useAppSelector<number | undefined>(state => state.me.data.rank);
+  const rankData = useAppSelector<Array<IUserRank>>(state => state.rank.data);
+  const [topImgs, setTopImgs] = useState<Array<string>>([]);
+
+  useEffect(() => {
+    const imgs:Array<string> = [];
+    if(rankData.length != 0) {
+      for (let i = 0; i < rankData.length; i++) {
+        if (i < 3 && rankData[i].avatar) {
+          //@ts-ignore
+          imgs.push(rankData[i].avatar);
+        }
+      }
+      setTopImgs(imgs);
+    }
+  }, [rankData]);
 
   useEffect(() => {
     if(referralStorage >= maxReferralStorage) {
@@ -30,8 +47,6 @@ export function SectionsBlock({ mult }: ISectionsBlock) {
     }
 
   }, [referralStorage, maxReferralStorage]);
-
-  const isDev = true;
 
   const multipCards = [
     {
@@ -50,17 +65,18 @@ export function SectionsBlock({ mult }: ISectionsBlock) {
       img: 'assets/Chain.png'
     },
   ];
+
+  //<UsersIcons imgs={topImgs} size={16}/>
   
   return (
     <div className={styles.sectionContainer}>
       <div className={styles.leftContainer}>
-        <CardSection title='Место в топе' onClick={() => {!isDev ? navigate('/rating') : navigate('/dev?type=rating')}}>
+        <CardSection title='Место в топе' onClick={() => { !isDev ? navigate('/rating') : navigate('/dev?type=rating') }}>
           {<div className={`${styles.bottomRank} ${isDev ? styles.dev : ''}`}>
             <div style={ETextStyles.InSb12120}>
               <span className={styles.rank1}>#</span>
-              <span>{formatNumber(1)}</span>
+              <span>{isDev ? '?' : (userRank ? formatNumber(userRank) : '?')}</span>
             </div>
-            <UsersIcons size={16}/>
           </div>}
         </CardSection>
         <CardSection title='Множитель' onClick={() => { setClose(false) }}>
