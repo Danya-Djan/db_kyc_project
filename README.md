@@ -38,6 +38,9 @@ The project is a collaboration of skilled and passionate individuals:
 ![Clicker Game Mockup1](./mockups/Hamster.png)
 ![Clicker Game Mockup2](./mockups/Notcoin.png)
 
+## **🏛️ Architecture**
+![Architecture](./mockups/architecture.png)
+
 ## 🚀 **Getting Started**
 
 Follow these steps to set up and run the project locally:
