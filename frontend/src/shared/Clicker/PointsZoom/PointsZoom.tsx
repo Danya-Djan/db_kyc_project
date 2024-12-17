@@ -75,7 +75,7 @@ export function PointsZoom({ points, sameInterval, setSameInterval, sameCoords, 
       dispatch<any>(updateEnergyRequestAsync(returnEnergy));
     } else {
       dispatch(meRequest());
-      axios.post(`${urlClick}/api/v1/batch-click/`,
+      axios.post(`${urlClick}/api/v1/batcher/batch-click/`,
         {
           count: initPoints
         },

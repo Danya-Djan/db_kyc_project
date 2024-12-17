@@ -78,7 +78,7 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
     }
 
     const firstClick = (token: string) => {
-        axios.post(`${URLClick}/api/v1/batch-click/`,
+        axios.post(`${URLClick}/api/v1/batcher/batch-click/`,
             {
                 count: 1
             },
@@ -116,7 +116,7 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
             const user = resp.data;
             sessionStorage.setItem('shT', 't');
             sessionStorage.setItem('shL', 't');
-            axios.get(`${URLClick}/api/v1/energy`, {
+            axios.get(`${URLClick}/api/v1/batcher/energy`, {
                 headers: {
                     //"Content-type": "application/json",
                     "Authorization": `TelegramToken ${token}`
@@ -213,7 +213,7 @@ export const meRequestAsync = (): ThunkAction<void, RootState, unknown, Action<s
                     if (!avatar) {
                         avatar = '';
                     }
-                    axios.get(`${URLClick}/api/v1/energy`, {
+                    axios.get(`${URLClick}/api/v1/batcher/energy`, {
                         headers: {
                             //"Content-type": "application/json",
                             "Authorization": `TelegramToken ${token}`
