@@ -15,14 +15,7 @@ MIGRATIONS_DIR = Path(__file__).parent.resolve() / "migrations"
 logger = logging.getLogger("uvicorn")
 
 async def connect_pg() -> asyncpg.Pool:
-    while True:
-        try:
-            logger.info(DB_URL)
-            pg_conn =  await asyncpg.create_pool(DB_URL)
-            return pg_conn
-        except OSError:
-            logger.info("Postgres is unavailable - sleeping")
-            await asyncio.sleep(2)
+    return await asyncpg.create_pool(DB_URL)
 
 
 async def get_pg(request: Request) -> asyncpg.Connection:

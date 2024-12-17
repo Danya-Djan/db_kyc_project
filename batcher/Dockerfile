@@ -2,11 +2,9 @@ FROM python:3.12
 
 WORKDIR /batcher
 
-COPY ./requirements.txt /batcher/requirements.txt
+COPY ./ /batcher
 
 RUN pip install --no-cache-dir --upgrade -r /batcher/requirements.txt
-
-COPY ./app /batcher/app
 
 ENV PYTHONPATH="${PYTHONPATH}:/batcher/app"
 

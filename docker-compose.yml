@@ -2,20 +2,20 @@ volumes:
   db_data: {}
   batcher_db_data: {}
   redis_data: {}
+  backend_media: {}
 
 services:
   backend:
-    build:
-      context: ./backend
+    build: ./backend
     depends_on:
-      - postgres
-      - rabbitmq
+      postgres: &healthy-dependency
+        condition: service_healthy
+      rabbitmq: *healthy-dependency
     volumes:
-      - ./backend:/app
-    command: /start.sh
-    entrypoint: /entrypoint.sh
+      - backend_media:/app/media
+    command: /app/scripts/start.sh
     restart: on-failure
-    env_file:
+    env_file: &backend-env-files
       - .env/dev/pg
       - .env/dev/back
       - .env/dev/rmq
@@ -24,44 +24,31 @@ services:
     ports:
       - '8000:8000'
 
-  postgres:
-    image: postgres:14.5-alpine
+  postgres: &pg-conf
+    image: postgres:17-alpine
     volumes:
       - db_data:/var/lib/postgresql/data
     env_file:
       - .env/dev/pg
     ports:
       - '5432:5432'
+    user: postgres
+    healthcheck: &pg-healthcheck
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 5s
+      timeout: 2s
+      retries: 5
 
   celery:
     build: ./backend
-    command: celery -A clicker worker -l info
-    volumes:
-      - ./backend:/app
-    env_file:
-      - .env/dev/back
-      - .env/dev/rmq
-      - .env/dev/pg
-      - .env/dev/bot
-      - .env/dev/web
+    command: /app/scripts/start_celery.sh
+    env_file: *backend-env-files
+    environment:
+      - CELERY_WORKER_COUNT=1
     depends_on:
-      - backend
-      - rabbitmq
-
-  celery-beat:
-    build: ./backend
-    command: celery -A clicker beat -l info
-    volumes:
-      - ./backend:/app
-    env_file:
-      - .env/dev/back
-      - .env/dev/rmq
-      - .env/dev/pg
-      - .env/dev/bot
-      - .env/dev/web
-    depends_on:
-      - backend
-      - rabbitmq
+      backend:
+        condition: service_started
+      rabbitmq: *healthy-dependency
 
   rabbitmq:
     container_name: 'rabbitmq'
@@ -71,6 +58,11 @@ services:
     ports:
       - '5672:5672'
       - '15672:15672'
+    healthcheck:
+      <<: *pg-healthcheck
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 2s
 
   redis:
     env_file:
@@ -81,13 +73,16 @@ services:
       - '6379:6379'
     volumes:
       - redis_data:/data
+    healthcheck:
+      <<: *pg-healthcheck
+      test: "[ $$(redis-cli -a $$REDIS_PASSWORD ping) = 'PONG' ]"
 
   batcher:
-    build:
-      context: ./batcher
+    build: ./batcher
     depends_on:
-      - redis
-      - batcher-postgres
+      redis: *healthy-dependency
+      batcher-postgres: *healthy-dependency
+      rabbitmq: *healthy-dependency
     env_file:
       - .env/dev/rmq
       - .env/dev/redis
@@ -99,7 +94,7 @@ services:
       - '8080:8080'
 
   batcher-postgres:
-    image: postgres:14.5-alpine
+    <<: *pg-conf
     volumes:
       - batcher_db_data:/var/lib/postgresql/data
     env_file:

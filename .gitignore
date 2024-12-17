@@ -7,3 +7,4 @@ celerybeat-schedule
 backend/static
 backend/media
 bot/logs.log
+bot/logfile.log

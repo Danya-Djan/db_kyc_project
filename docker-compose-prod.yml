@@ -2,20 +2,23 @@ volumes:
   db_data: {}
   batcher_db_data: {}
   redis_data: {}
+  backend_media: {}
+  certbot_www: {}
+  certbot_conf: {}
 
 services:
   backend:
     build:
       context: ./backend
     volumes:
-      - ./backend:/app
-    command: /gunicorn.sh
-    entrypoint: /entrypoint.sh
+      - backend_media:/app/media
+    command: /app/scripts/gunicorn.sh
     restart: on-failure
     depends_on:
-      - postgres
-      - rabbitmq
-    env_file:
+      postgres: &healthy-dependency
+        condition: service_healthy
+      rabbitmq: *healthy-dependency
+    env_file: &backend-env-files
       - .env/prod/pg
       - .env/prod/back
       - .env/prod/rmq
@@ -23,29 +26,33 @@ services:
       - .env/prod/web
 
   bot:
-    build:
-      context: ./bot
+    build: ./bot
     depends_on:
-      - backend
-    volumes:
-      - ./bot:/app
-    environment:
-      PROD: 1
+      backend: &started-dependency
+        condition: service_started
+      batcher: *started-dependency
+      memcached: *started-dependency
     env_file:
       - .env/prod/bot
       - .env/prod/web
-    command: /gunicorn.sh
+    command: /app/scripts/gunicorn.sh
     restart: on-failure
 
   memcached:
    image: memcached:latest
 
-  postgres:
-    image: postgres:14.5-alpine
+  postgres: &pg-conf
+    image: postgres:17-alpine
     volumes:
       - db_data:/var/lib/postgresql/data
     env_file:
       - .env/prod/pg
+    user: postgres
+    healthcheck: &pg-healthcheck
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 5s
+      timeout: 2s
+      retries: 5
 
   nginx:
     build:
@@ -55,61 +62,30 @@ services:
       - '80:80'
       - '443:443'
     depends_on:
-      - backend
-      - bot
-      - rabbitmq
-      - batcher
+      bot: *started-dependency
     volumes:
       - ./backend/static/:/static/
-      - ./nginx/certbot/conf:/etc/letsencrypt
-      - ./nginx/certbot/www:/var/www/certbot
     restart: unless-stopped
-    command: '/bin/sh -c ''while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g "daemon off;"'''
-
-  certbot:
-    container_name: certbot
-    image: certbot/certbot
-    volumes:
-      - ./nginx/certbot/conf:/etc/letsencrypt
-      - ./nginx/certbot/www:/var/www/certbot
-    restart: unless-stopped
-    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
 
   celery:
     build: ./backend
-    command: /start_celery.sh
-    volumes:
-      - ./backend:/app
-    env_file:
-      - .env/prod/back
-      - .env/prod/rmq
-      - .env/prod/pg
-      - .env/prod/bot
+    command: /app/scripts/start_celery.sh
+    env_file: *backend-env-files
+    environment:
+      - CELERY_WORKER_COUNT=10
     depends_on:
-      - backend
-      - rabbitmq
-
-  celery-beat:
-    build: ./backend
-    command: celery -A clicker beat -l info
-    volumes:
-      - ./backend:/app
-    env_file:
-      - .env/prod/back
-      - .env/prod/rmq
-      - .env/prod/pg
-      - .env/prod/bot
-    depends_on:
-      - backend
-      - rabbitmq
+      backend: *started-dependency
 
   rabbitmq:
     container_name: 'rabbitmq'
     image: 'rabbitmq:3-management-alpine'
     env_file:
       - .env/prod/rmq
-    ports:
-      - '15672:15672'
+    healthcheck:
+      <<: *pg-healthcheck
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 2s
 
   redis:
     env_file:
@@ -118,14 +94,16 @@ services:
     command: bash -c "redis-server --appendonly yes --requirepass $${REDIS_PASSWORD}"
     volumes:
       - redis_data:/data
+    healthcheck:
+      <<: *pg-healthcheck
+      test: "[ $$(redis-cli -a $${REDIS_PASSWORD} ping) = 'PONG' ]"
 
   batcher:
-    build:
-      context: ./batcher
+    build: ./batcher
     depends_on:
-      - redis
-      - batcher-postgres
-      - rabbitmq
+      redis: *healthy-dependency
+      batcher-postgres: *healthy-dependency
+      rabbitmq: *healthy-dependency
     env_file:
       - .env/prod/rmq
       - .env/prod/redis
@@ -134,7 +112,7 @@ services:
       - .env/prod/bot
 
   batcher-postgres:
-    image: postgres:14.5-alpine
+    <<: *pg-conf
     volumes:
       - batcher_db_data:/var/lib/postgresql/data
     env_file:
