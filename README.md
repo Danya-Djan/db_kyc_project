@@ -46,7 +46,7 @@ The project is a collaboration of skilled and passionate individuals:
 Follow these steps to set up and run the project locally:
 
 ### **1. Clone the Repository**
-
+ 
 ```bash
 git clone https://github.com/Danya-Djan/db_kyc_project.git
 cd db_kyc_project
