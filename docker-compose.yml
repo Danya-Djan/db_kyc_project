@@ -3,6 +3,7 @@ volumes:
   batcher_db_data: {}
   redis_data: {}
   backend_media: {}
+  backend_static: {}
 
 services:
   backend:
@@ -13,6 +14,7 @@ services:
       rabbitmq: *healthy-dependency
     volumes:
       - backend_media:/app/media
+      - backend_static:/app/static
     command: /app/scripts/start.sh
     restart: on-failure
     env_file: &backend-env-files

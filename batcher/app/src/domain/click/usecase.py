@@ -95,7 +95,7 @@ async def check_registration(r: redis.Redis, user_id: int, _token: str, backend_
     if await _has_any_clicks(r, user_id):
         return True
     async with aiohttp.ClientSession() as session:
-        async with session.get(f'{backend_url}/api/v1/users/{user_id}', headers={'Authorization': _token}) as resp:
+        async with session.get(f'{backend_url}/api/v1/users/{user_id}', headers={'Authorization': f'TelegramToken {_token}'}) as resp:
             return resp.status == 200
 
 

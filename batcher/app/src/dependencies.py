@@ -8,7 +8,6 @@ from typing import Tuple
 
 from .config import TG_TOKEN
 
-
 async def get_token_header(authorization: str = Header()) -> Tuple[int, str]:
     if not authorization:
         raise HTTPException(status_code=403, detail='Unauthorized')

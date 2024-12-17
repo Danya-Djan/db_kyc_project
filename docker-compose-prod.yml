@@ -3,8 +3,7 @@ volumes:
   batcher_db_data: {}
   redis_data: {}
   backend_media: {}
-  certbot_www: {}
-  certbot_conf: {}
+  backend_static: {}
 
 services:
   backend:
@@ -12,6 +11,7 @@ services:
       context: ./backend
     volumes:
       - backend_media:/app/media
+      - backend_static:/app/static
     command: /app/scripts/gunicorn.sh
     restart: on-failure
     depends_on:
@@ -64,7 +64,7 @@ services:
     depends_on:
       bot: *started-dependency
     volumes:
-      - ./backend/static/:/static/
+      - backend_static:/static/
     restart: unless-stopped
 
   celery:
