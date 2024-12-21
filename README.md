@@ -60,6 +60,7 @@ cd db_kyc_project
 ### **2. Environment Setup**
 
 Create a `.env` file in the root of the project and add the needed variables
+The exmaple can be viewed at [./env.example/](https://github.com/Danya-Djan/db_kyc_project/tree/dev/.env.example/dev)
 
 ### **3. Run the Project**
 
