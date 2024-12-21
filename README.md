@@ -41,6 +41,11 @@ The project is a collaboration of skilled and passionate individuals:
 ## **🏛️ Architecture**
 ![Architecture](./mockups/architecture.png)
 
+## 📊 **DataBase Structure**
+
+![ClickerDB1](./mockups/db_structure.svg)
+![ClickerDB2](./mockups/db_batcher.svg)
+
 ## 🚀 **Getting Started**
 
 Follow these steps to set up and run the project locally:
