@@ -19,6 +19,8 @@ def handle_mailing_list(mailing_list_id):
     )
     no_errors = True
     for mailing_list_receiver_info in mailing_list_receiver_infos:
+        if mailing_list_receiver_info.sent:
+            continue
         user = mailing_list_receiver_info.user
         body = {
             'tg_id': user.tg_id,
@@ -44,7 +46,7 @@ def handle_mailing_list(mailing_list_id):
 
 @app.task
 def check_mailing_lists():
-    for mailing_list in MailingList.objects.filter(time__lte=timezone.now() + timedelta(hours=1), status=MailingListStatus.WAITING):
+    for mailing_list in MailingList.objects.filter(time__lte=timezone.now() + timedelta(hours=1), status__in=[MailingListStatus.WAITING, MailingListStatus.PARTLY_FINISHED]):
         mailing_list.status = MailingListStatus.QUEUED
         mailing_list.save(update_fields=('status',))
         handle_mailing_list.apply_async(
