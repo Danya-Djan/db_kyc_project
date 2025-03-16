@@ -1,0 +1,68 @@
+[
+{
+    "model": "misc.setting",
+    "pk": 1,
+    "fields": {
+        "name": "SESSION_ENERGY",
+        "description": "Энергия на сессию",
+        "value": {
+            "value": 300
+        }
+    }
+},
+{
+    "model": "misc.setting",
+    "pk": 2,
+    "fields": {
+        "name": "PRICE_PER_CLICK",
+        "description": "Награда за клик",
+        "value": {
+            "value": 1
+        }
+    }
+},
+{
+    "model": "misc.setting",
+    "pk": 3,
+    "fields": {
+        "name": "DAY_MULT",
+        "description": "Дневной мультипликатор",
+        "value": {
+            "value": "1.5"
+        }
+    }
+},
+{
+    "model": "misc.setting",
+    "pk": 4,
+    "fields": {
+        "name": "WEEK_MULT",
+        "description": "Недельный мультипликатор",
+        "value": {
+            "value": "1.5"
+        }
+    }
+},
+{
+    "model": "misc.setting",
+    "pk": 5,
+    "fields": {
+        "name": "PROGRESS_MULT",
+        "description": "Мультипликатор прогресса",
+        "value": {
+            "value": "1.5"
+        }
+    }
+},
+{
+    "model": "misc.setting",
+    "pk": 6,
+    "fields": {
+        "name": "SESSION_COOLDOWN",
+        "description": "Кулдаун сессии",
+        "value": {
+            "value": 30
+        }
+    }
+}
+]

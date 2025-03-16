@@ -7,3 +7,4 @@ class Click(pydantic.BaseModel):
     userId: int
     dateTime: datetime.datetime
     value: decimal.Decimal
+    count: int
