@@ -8,7 +8,6 @@ from ..config import RMQ_HOST, RMQ_PORT, RMQ_USER, RMQ_PASSWORD
 
 
 fqdn = f'amqp://{RMQ_USER}:{str(RMQ_PASSWORD)}@{RMQ_HOST}:{RMQ_PORT}/'
-logger = logging.getLogger("uvicorn")
 
 async def get_connection() -> AbstractRobustConnection:
     return await aio_pika.connect_robust(fqdn)

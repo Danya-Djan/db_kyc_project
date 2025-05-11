@@ -2,6 +2,8 @@ DROP VIEW coefficients;
 
 DROP TABLE clicks;
 
+DROP TABLE settings;
+
 DROP TABLE users;
 
 DROP TABLE global_stat;
