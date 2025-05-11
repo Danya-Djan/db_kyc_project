@@ -19,4 +19,3 @@ def deliver_setting(setting_name):
                 routing_key=settings.SETTINGS_QUEUE_NAME,
                 declare=[queue],
             )
-

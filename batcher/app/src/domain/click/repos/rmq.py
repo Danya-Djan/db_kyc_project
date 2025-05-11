@@ -10,8 +10,8 @@ CELERY_QUEUE_NAME = "celery"
 CLICK_TASK_NAME = "clicks.celery.click.handle_click"
 
 
-async def send_click_batch_copy(chan: aio_pika.Channel, click: Click, count: int):
-    args = (click.userId, int(click.dateTime.timestamp() * 1e3), str(click.value), count)
+async def send_click(chan: aio_pika.Channel, click: Click):
+    args = (click.userId, int(click.dateTime.timestamp() * 1e3), str(click.value), click.count)
     await chan.default_exchange.publish(
         message=aio_pika.Message(
             body=json.dumps([

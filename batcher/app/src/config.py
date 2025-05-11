@@ -4,13 +4,6 @@ from functools import lru_cache
 
 config = Config()
 
-
-REDIS_USER = config('REDIS_USER')
-REDIS_PASSWORD = config('REDIS_PASSWORD', cast=Secret)
-REDIS_PORT = config('REDIS_PORT', cast=int)
-REDIS_HOST = config('REDIS_HOST')
-REDIS_DB = config('REDIS_DB')
-
 PG_HOST = config('POSTGRES_HOST')
 PG_PORT = config('POSTGRES_PORT', cast=int)
 PG_USER = config('POSTGRES_USER')

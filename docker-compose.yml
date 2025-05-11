@@ -1,7 +1,6 @@
 volumes:
   db_data: {}
   batcher_db_data: {}
-  redis_data: {}
   backend_media: {}
   backend_static: {}
 
@@ -66,28 +65,13 @@ services:
       interval: 10s
       timeout: 2s
 
-  redis:
-    env_file:
-      - .env/dev/redis
-    image: redis
-    command: bash -c "redis-server --appendonly yes --requirepass $${REDIS_PASSWORD}"
-    ports:
-      - '6379:6379'
-    volumes:
-      - redis_data:/data
-    healthcheck:
-      <<: *pg-healthcheck
-      test: "[ $$(redis-cli -a $$REDIS_PASSWORD ping) = 'PONG' ]"
-
   batcher:
     build: ./batcher
     depends_on:
-      redis: *healthy-dependency
       batcher-postgres: *healthy-dependency
       rabbitmq: *healthy-dependency
     env_file:
       - .env/dev/rmq
-      - .env/dev/redis
       - .env/dev/batcher-pg
       - .env/dev/batcher
       - .env/dev/bot
