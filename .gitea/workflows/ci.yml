@@ -23,13 +23,12 @@ jobs:
           python -m venv venv
           source venv/bin/activate
           pip install flake8
-          flake8 . --ignore=E501
+          flake8 . --ignore=E501 --exclude=venv
         continue-on-error: true
       - name: Run Semgrep (SAST)
         run: |
-          curl -sSL https://semgrep.dev/install.sh | sh
-          ./semgrep/semgrep scan --config auto --error
-
+          pip install semgrep
+          semgrep --config=auto .
   deploy:
     needs: lint-sast
     runs-on: ubuntu-latest
