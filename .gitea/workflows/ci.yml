@@ -1,0 +1,55 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [dev]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-sast:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Run Linter
+        run: |
+          pip install flake8
+          flake8 .
+
+      - name: Run Semgrep (SAST)
+        run: |
+          curl -sSL https://semgrep.dev/install.sh | sh
+          ./semgrep/semgrep scan --config auto --error
+
+  deploy:
+    needs: lint-sast
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/dev' || github.ref == 'refs/heads/main'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.SERVER_HOST }} >> ~/.ssh/known_hosts
+
+      - name: Copy app to server
+        run: |
+          TARGET=${{ secrets.TEST_SERVER }}
+          if [[ "$GITHUB_REF" == "refs/heads/main" ]]; then
+            TARGET=${{ secrets.PROD_SERVER }}
+          fi
+          scp -r . "$TARGET:/home/deploy/app"
+
+      - name: Deploy app remotely
+        run: |
+          TARGET=${{ secrets.TEST_SERVER }}
+          if [[ "$GITHUB_REF" == "refs/heads/main" ]]; then
+            TARGET=${{ secrets.PROD_SERVER }}
+          fi
+          ssh "$TARGET" 'cd /home/deploy/app && bash deploy.sh'
