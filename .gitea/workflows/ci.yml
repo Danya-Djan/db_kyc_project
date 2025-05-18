@@ -13,10 +13,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Run Linter
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+
+      - name: Install flake8 in venv
         run: |
+          python -m venv venv
+          source venv/bin/activate
           pip install flake8
-          flake8 .
+          flake8 db_kyc_project/
 
       - name: Run Semgrep (SAST)
         run: |
