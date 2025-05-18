@@ -18,7 +18,7 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install flake8 in venv
+      - name: Run linter (flake8)
         run: |
           python -m venv venv
           source venv/bin/activate
@@ -50,7 +50,7 @@ jobs:
           if [[ "$GITHUB_REF" == "refs/heads/main" ]]; then
             TARGET=${{ secrets.PROD_SERVER }}
           fi
-          scp -r . "$TARGET:/home/deploy/app"
+          scp -r . "$TARGET:~/app"
 
       - name: Deploy app remotely
         run: |
@@ -58,4 +58,4 @@ jobs:
           if [[ "$GITHUB_REF" == "refs/heads/main" ]]; then
             TARGET=${{ secrets.PROD_SERVER }}
           fi
-          ssh "$TARGET" 'cd /home/deploy/app && bash deploy.sh'
+          ssh "$TARGET" 'cd ~/app && bash deploy.sh'
