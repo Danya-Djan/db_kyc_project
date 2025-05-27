@@ -7,7 +7,7 @@ from starlette.exceptions import HTTPException
 from app.src.routers.api import router as router_api
 from app.src.routers.handlers import http_error_handler
 from app.src.domain.setting import launch_consumer
-from app.src.db import connect_pg, get_connection, get_channel, get_rmq
+from app.src.db import connect_pg, get_connection, get_channel, get_rmq, get_pg
 
 
 def get_application() -> FastAPI:
@@ -31,7 +31,7 @@ app = get_application()
 
 @app.on_event("startup")
 async def startup():
-    launch_consumer(get_connection)
+    launch_consumer(connect_pg, get_connection)
 
     app.state.pg_pool = await connect_pg()
 

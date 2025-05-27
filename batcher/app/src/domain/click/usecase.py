@@ -43,10 +43,10 @@ async def delete_user_info(pg: asyncpg.Connection, user_id: int) -> None:
 
 
 async def click_value(pg: asyncpg.Connection, user_id: int) -> decimal.Decimal:
-    price_per_click = get_setting('PRICE_PER_CLICK')
-    day_multiplier = get_setting('DAY_MULT')
-    week_multiplier = get_setting('WEEK_MULT')
-    progress_multiplier = get_setting('PROGRESS_MULT')
+    price_per_click = await get_setting(pg, 'PRICE_PER_CLICK')
+    day_multiplier = await get_setting(pg, 'DAY_MULT')
+    week_multiplier = await get_setting(pg, 'WEEK_MULT')
+    progress_multiplier = await get_setting(pg, 'PROGRESS_MULT')
 
     # period coefficients
     day_coef = await period_coefficient(pg, user_id, 24, day_multiplier)
@@ -86,15 +86,15 @@ async def _get_refresh_energy(pg: asyncpg.Connection, user_id: int, req_token: s
     new_auth_date = _auth_date_from_token(req_token)
     current_token = await get_user_session(pg, user_id)
     if current_token is None:
-        session_energy = int(get_setting('SESSION_ENERGY'))
+        session_energy = int(await get_setting(pg, 'SESSION_ENERGY'))
         await add_user(pg, user_id, req_token, session_energy)
         return session_energy
     if current_token != req_token:
         last_auth_date = _auth_date_from_token(current_token)
-        session_cooldown = get_setting('SESSION_COOLDOWN')
+        session_cooldown = await get_setting(pg, 'SESSION_COOLDOWN')
         if new_auth_date - last_auth_date < session_cooldown:
             raise HTTPException(status_code=403, detail='Unauthorized')
-        session_energy = int(get_setting('SESSION_ENERGY'))
+        session_energy = int(await get_setting(pg, 'SESSION_ENERGY'))
         await set_new_session(pg, user_id, req_token, session_energy)
         return session_energy
     else:

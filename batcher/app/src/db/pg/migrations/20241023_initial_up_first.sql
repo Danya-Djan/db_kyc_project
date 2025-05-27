@@ -13,6 +13,11 @@ CREATE TABLE clicks(
 );
 CREATE INDEX clicks_user_id_time_idx ON clicks(user_id, time);
 
+CREATE TABLE settings(
+    name VARCHAR(255) PRIMARY KEY,
+    value DECIMAL(100, 2) NOT NULL
+);
+
 CREATE MATERIALIZED VIEW coefficients AS
 SELECT 
     user_id,
