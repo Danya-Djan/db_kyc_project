@@ -1,7 +1,7 @@
 CREATE TABLE users(
     id BIGINT PRIMARY KEY,
     energy INTEGER NOT NULL CONSTRAINT non_negative_energy CHECK (energy >= 0),
-    session VARCHAR(255) NOT NULL
+    session TEXT NOT NULL
 );
 
 CREATE TABLE clicks(

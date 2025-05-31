@@ -4,6 +4,7 @@ import aio_pika
 from typing import Callable
 import asyncpg
 
+
 SETTING_QUEUE_NAME = "settings"
 
 
