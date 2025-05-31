@@ -1,18 +1,13 @@
-import asyncio
-
 from app.src.config import PG_HOST, PG_PORT, PG_USER, PG_PASSWORD, PG_DB
 from pathlib import Path
 from starlette.requests import Request
 import asyncpg
-import logging
 from asyncpg_trek import plan, execute, Direction
 from asyncpg_trek.asyncpg import AsyncpgBackend
 
 
 DB_URL = f'postgresql://{PG_USER}:{str(PG_PASSWORD)}@{PG_HOST}:{PG_PORT}/{PG_DB}'
 MIGRATIONS_DIR = Path(__file__).parent.resolve() / "migrations"
-
-logger = logging.getLogger("uvicorn")
 
 async def connect_pg() -> asyncpg.Pool:
     return await asyncpg.create_pool(DB_URL)

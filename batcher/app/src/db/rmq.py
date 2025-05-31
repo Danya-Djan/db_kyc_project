@@ -1,6 +1,4 @@
-import asyncio
 import aio_pika
-import logging
 from starlette.requests import Request
 from aio_pika.abc import AbstractRobustConnection
 

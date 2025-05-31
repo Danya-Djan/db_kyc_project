@@ -6,4 +6,4 @@ from misc.celery import deliver_setting as deliver_setting_celery
 
 @receiver(post_save, sender=Setting, dispatch_uid='deliver_setting')
 def deliver_setting(sender, instance, **kwargs):
-    deliver_setting_celery.delay(instance.name)
+    deliver_setting_celery.delay({instance.name: instance.value['value']})

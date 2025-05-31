@@ -7,4 +7,4 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for setting in Setting.objects.all():
-            deliver_setting.delay(setting.name)
+            deliver_setting.delay({setting.name: setting.value['value']})

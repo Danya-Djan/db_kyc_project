@@ -1,4 +1,3 @@
-import logging
 from aiogram import Bot, types
 from aiogram.dispatcher import Dispatcher
 from create_bot import bot, token, WEBHOOK_URL

@@ -14,13 +14,13 @@ services:
     volumes:
       - backend_media:/app/media
       - backend_static:/app/static
-    command: /app/scripts/start.sh
+    command: /app/scripts/dev.sh
     restart: on-failure
     env_file: &backend-env-files
       - .env/dev/pg
       - .env/dev/back
       - .env/dev/rmq
-      - .env/dev/bot
+      - .env/dev/bot_token
       - .env/dev/web
     ports:
       - '8000:8000'
@@ -74,7 +74,7 @@ services:
       - .env/dev/rmq
       - .env/dev/batcher-pg
       - .env/dev/batcher
-      - .env/dev/bot
+      - .env/dev/bot_token
       - .env/dev/web
     ports:
       - '8080:8080'

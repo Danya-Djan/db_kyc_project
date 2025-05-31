@@ -64,5 +64,27 @@
             "value": 30
         }
     }
+},
+{
+    "model": "misc.setting",
+    "pk": 7,
+    "fields": {
+        "name": "DEFAULT_TOP_LIMIT",
+        "description": "Количество пользователей в топе",
+        "value": {
+            "value": 10
+        }
+    }
+},
+{
+    "model": "misc.setting",
+    "pk": 8,
+    "fields": {
+        "name": "DEFAULT_NEIGHBOUR_LIMIT",
+        "description": "Количество соседей",
+        "value": {
+            "value": 3
+        }
+    }
 }
 ]
