@@ -28,7 +28,7 @@ jobs:
       - name: Run Semgrep (SAST)
         run: |
           pip install semgrep
-          semgrep --config=auto .
+          semgrep --config . -j 1
   deploy:
     needs: lint-sast
     runs-on: ubuntu-latest
