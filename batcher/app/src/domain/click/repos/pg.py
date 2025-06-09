@@ -18,7 +18,7 @@ async def store(conn: Connection, click: Click) -> int:
 async def delete_user_info(conn: Connection, user_id: int):
     async with conn.transaction():
         await conn.execute('DELETE FROM clicks WHERE user_id=$1', user_id)
-        await conn.execute('DELTE FROM users WHERE id=$1', user_id)
+        await conn.execute('DELETE FROM users WHERE id=$1', user_id)
 
 
 async def get_period_sum(conn: Connection, user_id: int, period: int) -> decimal.Decimal:
@@ -65,14 +65,15 @@ async def get_energy(conn: Connection, user_id: int) -> int:
 
 
 async def decr_energy(conn: Connection, user_id: int, amount: int) -> Tuple[int, int]:
-    new_energy, spent = await conn.fetchrow('''
-        WITH energy_cte AS (
-            SELECT energy, (CASE WHEN energy < $2 THEN energy ELSE $2 END) AS delta FROM users WHERE id=$1
-        )
-        UPDATE users AS u SET
-            energy=u.energy - e.delta
-        FROM energy_cte AS e
-        WHERE id=$1
-        RETURNING u.energy as new_energy, e.delta
-    ''', user_id, amount)
+    async with conn.transaction(isolation='serializable'):
+        new_energy, spent = await conn.fetchrow('''
+            WITH energy_cte AS (
+                SELECT energy, (CASE WHEN energy < $2 THEN energy ELSE $2 END) AS delta FROM users WHERE id=$1
+            )
+            UPDATE users AS u SET
+                energy=u.energy - e.delta
+            FROM energy_cte AS e
+            WHERE id=$1
+            RETURNING u.energy as new_energy, e.delta
+        ''', user_id, amount)
     return new_energy, spent
