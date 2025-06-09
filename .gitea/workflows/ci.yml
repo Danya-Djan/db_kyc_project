@@ -28,7 +28,7 @@ jobs:
       - name: Run Semgrep (SAST)
         run: |
           pip install semgrep
-          semgrep --config . -j 1
+          semgrep --config . --jobs 1 --max-memory 4000
   deploy:
     needs: lint-sast
     runs-on: ubuntu-latest
