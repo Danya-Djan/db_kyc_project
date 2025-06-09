@@ -31,7 +31,7 @@ The project is a collaboration of skilled and passionate individuals:
 
 2. **Michael Kostochka**: [Role: Backend Developer, Database Architect]
 3. **Sitnikov Arseniy**: [Role: Frontend Developer, Database Architect]
-4. **Vakulenkov Danila**: [Role: Backend Engineer, Database Architect]
+4. **Vakulenkov Danya**: [Role: Backend Engineer, Database Architect]
 
 ## 🎨 **Visuals**
 
